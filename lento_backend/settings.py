@@ -41,7 +41,8 @@ INSTALLED_APPS = [
      'corsheaders', 
      'rest_framework_swagger' ,
      'user_account' ,
-     'drf-yasg'
+     'drf-yasg',
+    'phonenumber_field',
      
 ]
 
