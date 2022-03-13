@@ -65,16 +65,16 @@ class Account(AbstractBaseUser):
 	cover					= models.ImageField(upload_to=upload_cover, blank=True , null=True)
 	is_staff				= models.BooleanField(default=False)
 	is_superuser			= models.BooleanField(default=False)
-	firstname 				= models.CharField(max_length=40 , default = '')
-	lastname 				= models.CharField(max_length=40 , default = '')
-	bio						= models.CharField(max_length=100, default = '')
+	firstname 				= models.CharField(max_length=40 , default = '', null=True)
+	lastname 				= models.CharField(max_length=40 , default = '', null=True)
+	bio						= models.CharField(max_length=100, default = '', null=True)
 	phone					= PhoneNumberField(null=True, blank= True)
 	date_birth				= models.DateField(max_length=8 ,default= timezone.now  , blank = True) 
 	province				= models.CharField(max_length=30,null = True , default = '')
 	job						= models.CharField(max_length = 30 , null = True , default = '')
 	gender					= models.CharField(max_length = 7 , null = True , default = 'male')
 	
-	
+
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = ['email']
 	objects = MyAccountManager()

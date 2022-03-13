@@ -45,9 +45,7 @@ INSTALLED_APPS = [
     'user_account' ,
     'drf_yasg',
     'phonenumber_field',
-    'rest_framework.authtoken', 
-
-     
+    'rest_framework.authtoken',     
 ]
 
 REST_FRAMEWORK = {
@@ -57,8 +55,6 @@ REST_FRAMEWORK = {
    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'] , 
 }
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -90,7 +86,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'lento_backend.wsgi.application'
-
+AUTH_USER_MODEL = 'user_account.Account'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
