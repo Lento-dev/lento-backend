@@ -42,7 +42,13 @@ class MyAccountManager(BaseUserManager):
 
 
 def upload_location(instance, filename, **kwargs):
-	file_path = 'account/{filename}'.format(
+	file_path = 'account/image/{filename}'.format(
+			 title=str(instance.username), filename=filename
+		) 
+	return file_path
+
+def upload_cover(instance, filename, **kwargs):
+	file_path = 'account/cover/{filename}'.format(
 			 title=str(instance.username), filename=filename
 		) 
 	return file_path
@@ -56,33 +62,31 @@ class Account(AbstractBaseUser):
 	is_admin				= models.BooleanField(default=False)
 	is_active				= models.BooleanField(default=False)
 	image 					= models.ImageField(upload_to=upload_location, blank=True , null=True , default = 'a2.jpg' )
+	cover					= models.ImageField(upload_to=upload_cover, blank=True , null=True)
 	is_staff				= models.BooleanField(default=False)
 	is_superuser			= models.BooleanField(default=False)
 	firstname 				= models.CharField(max_length=40 , default = '')
 	lastname 				= models.CharField(max_length=40 , default = '')
 	bio						= models.CharField(max_length=100, default = '')
 	phone					= PhoneNumberField(null=True, blank= True)
-	date_birth				= models.DateField(max_length=8 ,default= timezone.now  , blank = True)
-    #choicefield ? language? 
+	date_birth				= models.DateField(max_length=8 ,default= timezone.now  , blank = True) 
 	province				= models.CharField(max_length=30,null = True , default = '')
-	gender					= models.CharField(max_length = 10 , null = True , default = '')
-	#phone_number			= models.CharField(max_length = 12 , null = True , blank = True)
+	job						= models.CharField(max_length = 30 , null = True , default = '')
+	gender					= models.CharField(max_length = 7 , null = True , default = 'male')
+	
+	
 	USERNAME_FIELD = 'username'
 	REQUIRED_FIELDS = ['email']
 	objects = MyAccountManager()
-
-
 	def __str__(self):
 		return self.email
 
 	# For checking permissions.
 	def has_perm(self, perm, obj=None):
 		return self.is_admin
-
 	# Does this user have permission to view this app? 
 	def has_module_perms(self, app_label):
 		return True
-
 	@property
 	def _image(self):
 
