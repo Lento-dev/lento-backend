@@ -71,6 +71,8 @@ class Account(AbstractBaseUser):
 	phone					= PhoneNumberField(null=True, blank= True)
 	date_birth				= models.DateField(max_length=8 ,default= timezone.now  , blank = True) 
 	province				= models.CharField(max_length=30,null = True , default = '')
+	city 					= models.CharField(max_length=30,null = True , default = '')
+	country 				= models.CharField(max_length=30,null = True , default = '')
 	job						= models.CharField(max_length = 30 , null = True , default = '')
 	gender					= models.CharField(max_length = 7 , null = True , default = 'male')
 	
