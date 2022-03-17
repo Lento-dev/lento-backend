@@ -1,4 +1,4 @@
-
+from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.db.models.fields import BLANK_CHOICE_DASH
 from django.views import generic
@@ -29,6 +29,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from django.contrib.auth import authenticate
+from user_account.utils import Util
 
 @api_view(['POST', ]) 
 @permission_classes([])
@@ -49,6 +50,7 @@ def registration_view(request):
 				data['lastname'] = account.lastname
 				token = Token.objects.get(user=account).key
 				data['token'] = token
+				send_email_content(token , request , account)
 				#send_email_content(token , request , account)
                 
 			else:
@@ -156,4 +158,43 @@ def User_logout(request):
 	request.user.auth_token.delete()
 	logout(request)
 	return Response('User Logged out successfully')
+
+
+#activating user account
+@api_view(['GET', ]) 
+@permission_classes([])
+@authentication_classes([]) 
+def verification( request):
 	
+	token=request.GET.get('token')
+	try:
+	
+		myuser= Token.objects.get(key=token).user
+		id = myuser.pk
+		user = Account.objects.get(pk = id)
+		
+		
+	except(TypeError, ValueError, OverflowError, Token.DoesNotExist):
+		token1=None
+		return Response('Token is invalid or expired. Please request another confirmation email by signing in.', status=status.HTTP_400_BAD_REQUEST)
+	
+	except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
+		user = None 
+		if user is None:
+			return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
+	
+	
+	user.is_active = True
+	user.save()
+	return  render(request,'welcome.html') 
+	return Response('Email successfully confirmed') 
+
+
+#functions
+def send_email_content(token , request , account):
+	current_site = get_current_site(request).domain
+	reletivelink = reverse('account:verification')	
+	absurl='http://' + current_site +reletivelink + "?token=" +str(token)
+	email_body =   absurl
+	data = {'content':email_body ,'subject':'please verify you email' ,'to_email':[account.email]}	
+	Util.send_email(data)	

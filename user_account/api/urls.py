@@ -19,7 +19,8 @@ urlpatterns = [
 	path('register/', registration_view, name="register"),
 	path('login/', views.ObtainAuthTokenView.as_view(), name="login"),
 	path('logout/', views.User_logout, name="logout"),
-	path('DeleteAccount/', views.DeleteAccount.as_view(),name="DeleteAccount")
+	path('DeleteAccount/', views.DeleteAccount.as_view(),name="DeleteAccount"),
+	path('verification/' , views.verification, name="verification")
 ]
 
 

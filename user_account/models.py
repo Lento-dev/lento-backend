@@ -75,6 +75,7 @@ class Account(AbstractBaseUser):
 	country 				= models.CharField(max_length=30,null = True , default = '')
 	job						= models.CharField(max_length = 30 , null = True , default = '')
 	gender					= models.CharField(max_length = 7 , null = True , default = 'male')
+	education				= models.CharField(max_length = 30 , null = True , default = '')
 	
 
 	USERNAME_FIELD = 'username'
