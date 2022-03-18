@@ -116,7 +116,8 @@ def does_account_exist_view(request):
 		try:
 			account = Account.objects.get(email=email)
 			token = Token.objects.get(user=account)
-			email_body =  'url ?'
+			tokenkey = token.key
+			email_body =  'http://localhost:3000/reset-password' + '?token=' + str(tokenkey)
 			dataxx= {'content':email_body ,'subject':'change your password' ,'to_email':[account.email]}	
 			Util.send_email_pass(dataxx)
 			data['response'] = email 
