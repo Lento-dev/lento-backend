@@ -7,7 +7,7 @@ from rest_framework import generics
 from rest_framework import response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
-from user_account.api.serializers import RegistrationSerializer
+from user_account.api.serializers import RegistrationSerializer , ChangePasswordSerializer
 from django.core import validators
 from django.core.exceptions import ValidationError
 from rest_framework.authentication import TokenAuthentication
@@ -17,7 +17,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.contrib.auth import logout , login
 from rest_framework.views import APIView
 from user_account.models import Account
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes 
 import json
 from django.core.mail import EmailMessage
 from django.conf import settings
@@ -63,23 +63,6 @@ def registration_view(request):
 		raise ValidationError({"400": f'Field {str(e)} missing'})
 
 
-def validate_email(email):
-	account = None
-	try:
-		account = Account.objects.get(email=email)
-	except Account.DoesNotExist:
-		return None
-	if account != None:
-		return email
-
-def validate_username(username):
-	account = None
-	try:
-		account = Account.objects.get(username=username)
-	except Account.DoesNotExist:
-		return None
-	if account != None:
-		return username
 
 #login class
 
@@ -132,7 +115,13 @@ def does_account_exist_view(request):
 		data = {}
 		try:
 			account = Account.objects.get(usernme=email)
-			data['response'] = email
+			token = Token.objects.get(user=account)
+			data['response'] = email 
+			data['token'] = token
+			email_body =  'url ?'
+			data = {'content':email_body ,'subject':'change your password' ,'to_email':[account.email]}	
+			Util.send_email_pass(data)
+			
 		except Account.DoesNotExist:
 			data['response'] = "Account does not exist"
 		return Response(data)
@@ -189,6 +178,35 @@ def verification( request):
 	return  render(request,'welcome.html') 
 	return Response('Email successfully confirmed') 
 
+class ForgetPasswordView(UpdateAPIView):
+
+	serializer_class = ChangePasswordSerializer
+	model = Account
+	permission_classes = (IsAuthenticated,)
+	authentication_classes = (TokenAuthentication,)
+	def get_object(self, queryset=None ):
+		obj = self.request.user
+		return obj
+
+	def update(self, request, *args, **kwargs):
+		self.object = self.get_object()
+		serializer = self.get_serializer(data=request.data)
+
+		if serializer.is_valid():
+		
+
+			# confirm the new password
+			new_password = serializer.data.get("new_password")
+			confirm_new_password = serializer.data.get("confirm_new_password")
+			if new_password != confirm_new_password:
+				return Response({"new_password": ["New passwords must match"]}, status=status.HTTP_400_BAD_REQUEST)
+
+			# set_password also hashes the password that the user will get
+			self.object.set_password(serializer.data.get("new_password"))
+			self.object.save()
+			return Response({"response":"successfully changed password"}, status=status.HTTP_200_OK)
+
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #functions
 def send_email_content(token , request , account):
@@ -198,3 +216,21 @@ def send_email_content(token , request , account):
 	email_body =   absurl
 	data = {'content':email_body ,'subject':'please verify you email' ,'to_email':[account.email]}	
 	Util.send_email(data)	
+
+def validate_email(email):
+	account = None
+	try:
+		account = Account.objects.get(email=email)
+	except Account.DoesNotExist:
+		return None
+	if account != None:
+		return email
+
+def validate_username(username):
+	account = None
+	try:
+		account = Account.objects.get(username=username)
+	except Account.DoesNotExist:
+		return None
+	if account != None:
+		return username
