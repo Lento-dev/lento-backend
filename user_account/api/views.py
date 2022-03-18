@@ -114,13 +114,16 @@ def does_account_exist_view(request):
 		email = request.GET['email'].lower()
 		data = {}
 		try:
-			account = Account.objects.get(usernme=email)
+			account = Account.objects.get(email=email)
 			token = Token.objects.get(user=account)
-			data['response'] = email 
-			data['token'] = token
 			email_body =  'url ?'
-			data = {'content':email_body ,'subject':'change your password' ,'to_email':[account.email]}	
-			Util.send_email_pass(data)
+			dataxx= {'content':email_body ,'subject':'change your password' ,'to_email':[account.email]}	
+			Util.send_email_pass(dataxx)
+			data['response'] = email 
+			data['token'] = token.key
+			
+
+			
 			
 		except Account.DoesNotExist:
 			data['response'] = "Account does not exist"
