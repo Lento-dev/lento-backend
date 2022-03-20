@@ -23,7 +23,8 @@ urlpatterns = [
     path('verification/', views.verification, name="verification"),
     path('change_password/', views.ForgetPasswordView.as_view(), name="change_password"),
     path('verification/', views.verification, name="verification"),
-    path('edit-profile/', views.EditProfileView.as_view(), name='edit-profile')
+    path('edit-profile/', views.UserProfileRetrieveUpdateView.as_view({'put': 'update'}), name='edit-profile'),
+    path('user-profile/', views.UserProfileRetrieveUpdateView.as_view({'get': 'retrieve'}), name='user-profile')
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

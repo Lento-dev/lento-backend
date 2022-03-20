@@ -48,10 +48,13 @@ class ChangePasswordSerializer(serializers.Serializer):
     confirm_new_password = serializers.CharField(required=True)
 
 
-class EditProfileSerializer(serializers.ModelSerializer):
+class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = (
-            'image', 'cover', 'firstname', 'lastname', 'bio', 'phone', 'date_birth', 'province', 'city', 'country',
-            'job', 'gender', 'education'
+            'username', 'email', 'image', 'cover', 'firstname', 'lastname', 'bio', 'phone', 'date_birth', 'province',
+            'city', 'country', 'job', 'gender', 'education'
         )
+        extra_kwargs = {
+            'username': {'read_only': True}, 'email': {'read_only': True},
+        }

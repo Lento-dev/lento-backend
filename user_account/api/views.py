@@ -7,7 +7,7 @@ from rest_framework import generics
 from rest_framework import response
 from rest_framework.decorators import api_view
 from rest_framework.authtoken.models import Token
-from user_account.api.serializers import RegistrationSerializer, EditProfileSerializer, ChangePasswordSerializer
+from user_account.api.serializers import RegistrationSerializer, UserProfileSerializer, ChangePasswordSerializer
 from django.core import validators
 from django.core.exceptions import ValidationError
 from rest_framework.authentication import TokenAuthentication
@@ -30,6 +30,7 @@ from rest_framework.views import APIView
 from rest_framework.generics import UpdateAPIView
 from django.contrib.auth import authenticate
 from user_account.utils import Util
+from rest_framework import viewsets
 
 
 @api_view(['POST', ])
@@ -238,9 +239,9 @@ def validate_username(username):
         return username
 
 
-class EditProfileView(generics.UpdateAPIView):
+class UserProfileRetrieveUpdateView(generics.RetrieveUpdateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = EditProfileSerializer
+    serializer_class = UserProfileSerializer
     queryset = Account.objects.all()
 
     def get_object(self):
