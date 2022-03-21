@@ -78,8 +78,8 @@ class Account(AbstractBaseUser):
 	education				= models.CharField(max_length = 30 , null = True , default = '')
 	
 
-	USERNAME_FIELD = 'username'
-	REQUIRED_FIELDS = ['email']
+	USERNAME_FIELD = 'email'
+	REQUIRED_FIELDS = ['username']
 	objects = MyAccountManager()
 	def __str__(self):
 		return self.email

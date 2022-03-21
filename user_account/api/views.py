@@ -76,7 +76,7 @@ class ObtainAuthTokenView(APIView):
 		email = request.POST.get('email')
 		username = request.POST.get('username')
 		password = request.POST.get('password')
-		account = authenticate(username=username, password=password)
+		account = authenticate(username=email, password=password)
 		#print("fortest" ,account.email == email)
 		if (account):
 			try:
@@ -89,7 +89,7 @@ class ObtainAuthTokenView(APIView):
                 #print("this os")
 				context['response'] = 'Successfully authenticated.'
 				context['pk'] = account.pk
-				context['username'] = username.lower()
+				context['username'] = email.lower()
 				context['token'] = token.key
               
 			else: 
