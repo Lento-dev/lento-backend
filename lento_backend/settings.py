@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework' ,
     'corsheaders', 
-    'rest_framework_swagger' ,
     'user_account' ,
     'drf_yasg',
     'phonenumber_field',

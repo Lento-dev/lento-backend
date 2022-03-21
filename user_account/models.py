@@ -20,8 +20,8 @@ class MyAccountManager(BaseUserManager):
 			email=self.normalize_email(email),
 			username=username,
 		)
-		user.firstname = fname; 
-		user.lastname= lname; 
+		user.firstname = fname;
+		user.lastname= lname;
 		user.set_password(password)
 		user.save(using=self._db)
 		return user
@@ -44,13 +44,13 @@ class MyAccountManager(BaseUserManager):
 def upload_location(instance, filename, **kwargs):
 	file_path = 'account/image/{filename}'.format(
 			 title=str(instance.username), filename=filename
-		) 
+		)
 	return file_path
 
 def upload_cover(instance, filename, **kwargs):
 	file_path = 'account/cover/{filename}'.format(
 			 title=str(instance.username), filename=filename
-		) 
+		)
 	return file_path
 
 
@@ -67,16 +67,15 @@ class Account(AbstractBaseUser):
 	is_superuser			= models.BooleanField(default=False)
 	firstname 				= models.CharField(max_length=40 , default = '', null=True)
 	lastname 				= models.CharField(max_length=40 , default = '', null=True)
-	bio						= models.CharField(max_length=100, default = '', null=True)
+	bio						= models.CharField(max_length=100, default = '', null=True, blank=True)
 	phone					= PhoneNumberField(null=True, blank= True)
-	date_birth				= models.DateField(max_length=8 ,default= timezone.now  , blank = True) 
-	province				= models.CharField(max_length=30,null = True , default = '')
-	city 					= models.CharField(max_length=30,null = True , default = '')
-	country 				= models.CharField(max_length=30,null = True , default = '')
-	job						= models.CharField(max_length = 30 , null = True , default = '')
-	gender					= models.CharField(max_length = 7 , null = True , default = 'male')
-	education				= models.CharField(max_length = 30 , null = True , default = '')
-	
+	date_birth				= models.DateField(max_length=8 ,default= timezone.now  , blank = True)
+	province				= models.CharField(max_length=30,null = True , default = '', blank=True)
+	city 					= models.CharField(max_length=30,null = True , default = '', blank=True)
+	country 				= models.CharField(max_length=30,null = True , default = '', blank=True)
+	job						= models.CharField(max_length = 30 , null = True , default = '', blank=True)
+	gender					= models.CharField(max_length = 7 , null = True , default = 'male', blank=True)
+	education				= models.CharField(max_length = 30 , null = True , default = '', blank=True)
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['username']
@@ -87,7 +86,7 @@ class Account(AbstractBaseUser):
 	# For checking permissions.
 	def has_perm(self, perm, obj=None):
 		return self.is_admin
-	# Does this user have permission to view this app? 
+	# Does this user have permission to view this app?
 	def has_module_perms(self, app_label):
 		return True
 	@property
@@ -101,6 +100,3 @@ class Account(AbstractBaseUser):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
-
-
