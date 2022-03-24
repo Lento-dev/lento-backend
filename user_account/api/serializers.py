@@ -53,7 +53,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = Account
         fields = (
             'username', 'email', 'image', 'cover', 'firstname', 'lastname', 'bio', 'phone', 'date_birth', 'province',
-            'city', 'country', 'job', 'gender', 'education'
+            'city', 'country', 'job', 'gender', 'education' , 'date_joined' , 'experience' , 
         )
         extra_kwargs = {
             'username': {'read_only': True}, 'email': {'read_only': True},

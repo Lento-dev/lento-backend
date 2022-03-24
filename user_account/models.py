@@ -76,6 +76,9 @@ class Account(AbstractBaseUser):
 	job						= models.CharField(max_length = 30 , null = True , default = '', blank=True)
 	gender					= models.CharField(max_length = 7 , null = True , default = 'male', blank=True)
 	education				= models.CharField(max_length = 30 , null = True , default = '', blank=True)
+	region				    = models.CharField(max_length = 30 , null = True , default = '', blank=True)
+	experience 			    = models.CharField(max_length = 30 , null = True , default = '', blank=True)
+	
 
 	USERNAME_FIELD = 'email'
 	REQUIRED_FIELDS = ['username']
