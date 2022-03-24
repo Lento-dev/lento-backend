@@ -90,7 +90,7 @@ class ObtainAuthTokenView(APIView):
                 # print("this os")
                 context['response'] = 'Successfully authenticated.'
                 context['pk'] = account.pk
-                context['email'] = username.lower()
+                context['email'] = email.lower()
                 context['token'] = token.key
 
             else:
