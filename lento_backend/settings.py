@@ -17,7 +17,6 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -40,7 +39,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True  
 EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -50,12 +48,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
+    'user_account',
+    'drf_yasg'
     'rest_framework' ,
     'corsheaders', 
     'user_account' ,
     'drf_yasg',
     'phonenumber_field',
-    'rest_framework.authtoken',     
+    'rest_framework.authtoken',
 ]
 
 REST_FRAMEWORK = {
@@ -97,6 +99,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'lento_backend.wsgi.application'
+
 AUTH_USER_MODEL = 'user_account.Account'
 
 # Database
@@ -104,11 +107,14 @@ AUTH_USER_MODEL = 'user_account.Account'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'P@ssw0rdPostgres',
+        'HOST': os.environ.get('DB_HOST', default='127.0.0.1'),
+        'PORT': 5432
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -128,7 +134,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -141,7 +146,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
