@@ -1,28 +1,17 @@
-from django.core.exceptions import ViewDoesNotExist
 from django.urls import path
-
 from rest_framework.urlpatterns import format_suffix_patterns
-
 from user_account.api import views
-from user_account.api.views import (
-    DeleteAccount,
-    registration_view,
-
-)
-
-from rest_framework.authtoken.views import obtain_auth_token
-
-app_name = 'account'
+from rest_registration.api.views import login, logout, register, verify_registration, send_reset_password_link, \
+    reset_password, change_password
 
 urlpatterns = [
-    path('exist/', views.does_account_exist_view, name="check_if_account_exists"),
-    path('register/', registration_view, name="register"),
-    path('login/', views.ObtainAuthTokenView.as_view(), name="login"),
-    path('logout/', views.User_logout, name="logout"),
-    path('DeleteAccount/', views.DeleteAccount.as_view(), name="DeleteAccount"),
-    path('verification/', views.verification, name="verification"),
-    path('change_password/', views.ForgetPasswordView.as_view(), name="change_password"),
-    path('verification/', views.verification, name="verification"),
+    path('login/', login, name='login'),
+    path('logout/', logout, name='logout'),
+    path('register/', register, name='register'),
+    path('verify_registration/', verify_registration, name='verify_registration'),
+    path('send_reset_password_link/', send_reset_password_link, name='send_reset_password_link'),
+    path('reset_password/', reset_password, name='reset_password'),
+    path('change_password/', change_password, name='change_password'),
     path('edit-profile/', views.UserProfileRetrieveUpdateView.as_view({'put': 'update'}), name='edit-profile'),
     path('user-profile/', views.UserProfileRetrieveUpdateView.as_view({'get': 'retrieve'}), name='user-profile')
 ]
