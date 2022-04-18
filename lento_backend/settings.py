@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 
-DEPLOY = os.environ.get('DEPLOY', default=0)
+DEPLOY = int(os.environ.get('DEPLOY', default=0))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -45,16 +45,28 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'rest_framework.authtoken',
     'rest_registration',
+    'oauth2_provider',
+    'social_django',
+    'drf_social_oauth2',
 ]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'drf_social_oauth2.authentication.SocialAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
 }
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'drf_social_oauth2.backends.DjangoOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -80,6 +92,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -152,7 +166,7 @@ TEMP = os.path.join(BASE_DIR, 'temp')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FRONTEND_HOST = os.environ.get('FRONTEND_HOST', default='https://localhost:3000/')
+FRONTEND_HOST = os.environ.get('FRONTEND_HOST', default='https://localhost:3000')
 
 REST_REGISTRATION = {
     'REGISTER_VERIFICATION_URL': f'{FRONTEND_HOST}/verify-user/',
@@ -160,3 +174,10 @@ REST_REGISTRATION = {
     'REGISTER_EMAIL_VERIFICATION_URL': f'{FRONTEND_HOST}/verify-email/',
     'VERIFICATION_FROM_EMAIL': EMAIL_HOST_USER,
 }
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+]

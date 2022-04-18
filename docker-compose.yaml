@@ -11,7 +11,7 @@ services:
     environment:
       DB_HOST: "db"
       DEPLOY: 1 # set this to 0 for development
-      FRONTEND_HOST: "https://localhost:3000/"
+      FRONTEND_HOST: "https://localhost:3000"
     depends_on:
       - db
     volumes:
