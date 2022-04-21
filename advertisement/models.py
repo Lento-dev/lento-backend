@@ -17,8 +17,10 @@ class BaseAdvertisement(models.Model):
 
 
     class Meta:
-        abstract = True
         ordering = ['created']
+
+
+
 
 class ClothAdvertisement(BaseAdvertisement): 
     province = models.CharField(max_length=100, blank=True , null = True) 
@@ -52,7 +54,7 @@ class AnimalAdvertisement(BaseAdvertisement):
 
 class ServiceAdvertisement(BaseAdvertisement): 
     service_type = models.CharField(max_length = 50)
-    
+
 
     
    
