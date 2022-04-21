@@ -9,7 +9,7 @@ WORKDIR /code
 
 COPY ./requirements.txt .
 
-RUN pip install --default-timeout=100 -r requirements.txt
+RUN pip install -r requirements.txt
 
 COPY . .
 
