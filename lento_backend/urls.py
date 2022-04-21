@@ -22,6 +22,6 @@ urlpatterns = [
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('admin/', admin.site.urls),
     path('api/account/', include('user_account.api.urls')),
-    path('social-auth/', include('drf_social_oauth2.urls',namespace='drf')),
+    path('social-auth/', include('drf_social_oauth2.urls', namespace='drf')),
 ]
 urlpatterns +=static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)

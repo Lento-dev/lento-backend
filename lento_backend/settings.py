@@ -166,7 +166,7 @@ TEMP = os.path.join(BASE_DIR, 'temp')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-FRONTEND_HOST = os.environ.get('FRONTEND_HOST', default='https://localhost:3000')
+FRONTEND_HOST = os.environ.get('FRONTEND_HOST', default='http://localhost:3000')
 
 REST_REGISTRATION = {
     'REGISTER_VERIFICATION_URL': f'{FRONTEND_HOST}/verify-user/',
@@ -174,8 +174,8 @@ REST_REGISTRATION = {
     'REGISTER_EMAIL_VERIFICATION_URL': f'{FRONTEND_HOST}/verify-email/',
     'VERIFICATION_FROM_EMAIL': EMAIL_HOST_USER,
 }
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '862951024028-vh67as9hmug8r225dfucffluv6tcqc6q.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
