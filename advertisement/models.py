@@ -26,12 +26,15 @@ class ClothAdvertisement(BaseAdvertisement):
     cloth_status = models.CharField(max_length=30 , blank = True)
     for_men = models.BooleanField(default=False)
     for_women = models.BooleanField(default=False)
-    for_men = models.BooleanField(default=False)
+    for_kids = models.BooleanField(default=False)
     unlimited = models.BooleanField(default=False)
-    cloth_type =  [('scarf/shawl', 'scarf/shawl'), ('pants', 'pants') , ('T-shirt', 'T-shirt')  , ('hat', 'hat') , 
-    ('under wear', 'under wear') , ('jackets/coats' , 'jackets/coats')  ]
-    cloth_size =[('free size','free size') , ('Large') , ('Large') , ('medium' , 'medium'),('small', 'small'),
-     ('extra large','extra large') ,('extra small','extra small') ]
+    cloth_types =  [('scarf/shawl', 'scarf/shawl'), ('pants', 'pants') , ('T-shirt', 'T-shirt')  , ('hat', 'hat') , 
+    ('under wear', 'under wear') , ('jackets/coats' , 'jackets/coats') , ]
+    cloth_sizes =[('free size','free size') , ('Large' , 'Large') , ('medium' , 'medium'),('small', 'small'),
+    ('extra large','extra large') ,('extra small','extra small'), ]
+    cloth_size = models.CharField(max_length=20 , choices= cloth_sizes , blank= True )
+    cloth_type = models.CharField(max_length= 20 , choices= cloth_types ,blank=True )
+
     
 
 
