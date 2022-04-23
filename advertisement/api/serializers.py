@@ -1,8 +1,10 @@
+from typing_extensions import Required
 from rest_framework import serializers 
 from advertisement.models import BaseAdvertisement ,FoodAdvertisement , ServiceAdvertisement , AnimalAdvertisement, ClothAdvertisement
 
 class Advertisement(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.email')
+    Image = serializers.ImageField(required = False)
     class Meta:
 
         model = BaseAdvertisement
