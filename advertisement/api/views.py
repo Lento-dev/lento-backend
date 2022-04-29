@@ -70,3 +70,31 @@ class DeleteAdvertisementView(generics.DestroyAPIView):
     serializer_class = Advertisement
     queryset = BaseAdvertisement.objects.all()
     lookup_field = 'id'
+
+
+class UpdateClothesAdvertisementView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = clothesAd
+    queryset = ClothAdvertisement.objects.all()
+    lookup_field = 'id'
+
+
+class UpdateFoodAdvertisementView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = FoodAd
+    queryset = FoodAdvertisement.objects.all()
+    lookup_field = 'id'
+
+
+class UpdateServiceAdvertisementView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = ServiceAd
+    queryset = ServiceAdvertisement.objects.all()
+    lookup_field = 'id'
+
+
+class UpdateAnimalAdvertisementView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = animalAd
+    queryset = AnimalAdvertisement.objects.all()
+    lookup_field = 'id'

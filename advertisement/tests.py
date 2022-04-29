@@ -45,3 +45,43 @@ class AdvertisementsTest(TestCase):
         force_authenticate(request, user=Account.objects.create_user('test_user2', "test2@example.com", "123456"))
         response = view(request, id=test_ad.id)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_clothes_advertisement(self):
+        test_ad = ClothAdvertisement.objects.create(Title='test-title', owner=self.test_user, cloth_type='pants')
+        view = views.UpdateClothesAdvertisementView.as_view()
+        request = self.factory.put(f'/advertisement/update/<{test_ad.id}>/',
+                                   data={'Title': 'updated-title', 'cloth_type': 'hat'})
+        force_authenticate(request, user=self.test_user)
+        response = view(request, id=test_ad.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual([response.data['Title'], response.data['cloth_type']], ['updated-title', 'hat'])
+
+    def test_update_food_advertisement(self):
+        test_ad = FoodAdvertisement.objects.create(Title='test-title', owner=self.test_user, Food_type='meat')
+        view = views.UpdateFoodAdvertisementView.as_view()
+        request = self.factory.put(f'/advertisement/update/<{test_ad.id}>/',
+                                   data={'Title': 'updated-title', 'Food_type': 'vegetables'})
+        force_authenticate(request, user=self.test_user)
+        response = view(request, id=test_ad.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual([response.data['Title'], response.data['Food_type']], ['updated-title', 'vegetables'])
+
+    def test_update_animal_advertisement(self):
+        test_ad = AnimalAdvertisement.objects.create(Title='test-title', owner=self.test_user, animal_breed='husky')
+        view = views.UpdateAnimalAdvertisementView.as_view()
+        request = self.factory.put(f'/advertisement/update/<{test_ad.id}>/',
+                                   data={'Title': 'updated-title', 'animal_breed': 'bulldog'})
+        force_authenticate(request, user=self.test_user)
+        response = view(request, id=test_ad.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual([response.data['Title'], response.data['animal_breed']], ['updated-title', 'bulldog'])
+
+    def test_update_service_advertisement(self):
+        test_ad = ServiceAdvertisement.objects.create(Title='test-title', owner=self.test_user, service_type='medical')
+        view = views.UpdateServiceAdvertisementView.as_view()
+        request = self.factory.put(f'/advertisement/update/<{test_ad.id}>/',
+                                   data={'Title': 'updated-title', 'service_type': 'dentistry'})
+        force_authenticate(request, user=self.test_user)
+        response = view(request, id=test_ad.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertListEqual([response.data['Title'], response.data['service_type']], ['updated-title', 'dentistry'])
