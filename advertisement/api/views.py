@@ -1,8 +1,26 @@
+from venv import create
 from rest_framework import generics,status , viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from .serializers import Advertisement , ServiceAd, FoodAd , animalAd , clothesAd 
 from advertisement.models import BaseAdvertisement , ServiceAdvertisement , FoodAdvertisement , AnimalAdvertisement ,ClothAdvertisement
+from drf_multiple_model.views import ObjectMultipleModelAPIView
+
+
+
+class HomeAPIView(ObjectMultipleModelAPIView):
+    permission_classes = [IsAuthenticated]
+    pagination_class = None
+    
+        
+    def get_querylist(self):
+        querylist = [
+            {'queryset': FoodAdvertisement.objects.filter(owner = self.request.user.id ), 'serializer_class': FoodAd},
+            {'queryset': ServiceAdvertisement.objects.filter(owner = self.request.user.id), 'serializer_class': ServiceAd},
+            {'queryset': ClothAdvertisement.objects.filter(owner = self.request.user.id), 'serializer_class':clothesAd },]
+        
+        return  querylist; 
+        
 
 class Foodcreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]

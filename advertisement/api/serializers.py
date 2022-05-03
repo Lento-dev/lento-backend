@@ -8,7 +8,7 @@ class Advertisement(serializers.ModelSerializer):
     class Meta:
 
         model = BaseAdvertisement
-        fields = ('id' , 'Title' , 'Description' , 'Image' , 'province' , 'City','Address' , 'owner')
+        fields = ('id' , 'Title' , 'Description' , 'Image' , 'province' , 'City','Address' , 'owner' )
       
 
 

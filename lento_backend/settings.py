@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     'social_django',
     'drf_social_oauth2',
     'advertisement', 
+    'drf_multiple_model',
+
 ]
 
 REST_FRAMEWORK = {

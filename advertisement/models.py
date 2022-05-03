@@ -18,6 +18,7 @@ class BaseAdvertisement(models.Model):
     City = models.CharField(max_length= 100 , blank= True , null=True)
     Address = models.CharField(max_length=500 , blank=True , null=True)
     owner  = models.ForeignKey('user_account.Account', related_name='advertisement_owner', on_delete=models.CASCADE, blank=True )
+    
 
 
 
