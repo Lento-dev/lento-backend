@@ -52,22 +52,9 @@ class AnimalAdvertisement(BaseAdvertisement):
     
 
 
-class ServiceAdvertisement(BaseAdvertisement): 
-    service_type =[('dentistry','dentistry'),('medical','medical'),('piping' , 'piping') , ('masonry', 'masonry')
-    ,('gardening', 'gardening'), ('vetinery','vetinery'),('teaching', 'teaching'),('Psychology' , 'Psychology')]
+class ServiceAdvertisement(BaseAdvertisement):
+    service_types = [('dentistry', 'dentistry'), ('medical', 'medical'), ('piping', 'piping'), ('masonry', 'masonry'),
+                     ('gardening', 'gardening'), ('vetinery', 'vetinery'), ('teaching', 'teaching'),
+                     ('Psychology', 'Psychology')]
+    service_type = models.CharField(max_length=20, choices=service_types, blank=True)
     expiration_date = models.DateField(max_length=8, null=True, blank=True)
-    
-   
-
-   
-
-
-
-    
-   
-
-
-
-
-
-

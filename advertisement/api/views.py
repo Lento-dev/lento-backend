@@ -1,8 +1,10 @@
 from rest_framework import generics,status , viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from .serializers import Advertisement , ServiceAd, FoodAd , animalAd , clothesAd 
+from .serializers import Advertisement , ServiceAd, FoodAd , animalAd , clothesAd
 from advertisement.models import BaseAdvertisement , ServiceAdvertisement , FoodAdvertisement , AnimalAdvertisement ,ClothAdvertisement
+from advertisement.permissions import IsOwner
+
 
 class Foodcreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -63,54 +65,36 @@ class clothcreate(generics.CreateAPIView, viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
+class DeleteAdvertisementView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = Advertisement
+    queryset = BaseAdvertisement.objects.all()
+    lookup_field = 'id'
 
 
+class UpdateClothesAdvertisementView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = clothesAd
+    queryset = ClothAdvertisement.objects.all()
+    lookup_field = 'id'
 
 
+class UpdateFoodAdvertisementView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = FoodAd
+    queryset = FoodAdvertisement.objects.all()
+    lookup_field = 'id'
 
 
+class UpdateServiceAdvertisementView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = ServiceAd
+    queryset = ServiceAdvertisement.objects.all()
+    lookup_field = 'id'
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+class UpdateAnimalAdvertisementView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = animalAd
+    queryset = AnimalAdvertisement.objects.all()
+    lookup_field = 'id'
