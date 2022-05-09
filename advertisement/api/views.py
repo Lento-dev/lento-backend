@@ -1,10 +1,12 @@
+from urllib import request
 from venv import create
-from .serializers import Advertisement , ServiceAd, FoodAd , animalAd , clothesAd 
-from advertisement.models import BaseAdvertisement , ServiceAdvertisement , FoodAdvertisement , AnimalAdvertisement ,ClothAdvertisement
+from winreg import QueryInfoKey
+# from xxlimited import foo
 from drf_multiple_model.views import ObjectMultipleModelAPIView
 from rest_framework import generics, status, viewsets
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from .serializers import BaseAdvertisementSerializer, ServiceAdvertisementSerializer, FoodAdvertisementSerializer, \
     AnimalAdvertisementSerializer, ClothesAdvertisementSerializer, BaseAdvertisementPolymorphicSerializer
 from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAdvertisement, AnimalAdvertisement, \
@@ -19,12 +21,28 @@ class HomeAPIView(ObjectMultipleModelAPIView):
         
     def get_querylist(self):
         querylist = [
-            {'queryset': FoodAdvertisement.objects.filter(owner = self.request.user.id ), 'serializer_class': FoodAd},
-            {'queryset': ServiceAdvertisement.objects.filter(owner = self.request.user.id), 'serializer_class': ServiceAd},
-            {'queryset': ClothAdvertisement.objects.filter(owner = self.request.user.id), 'serializer_class':clothesAd },]
+            {'queryset': FoodAdvertisement.objects.filter(owner = self.request.user.id ), 'serializer_class':  FoodAdvertisementSerializer},
+            {'queryset': ServiceAdvertisement.objects.filter(owner = self.request.user.id), 'serializer_class': ServiceAdvertisementSerializer},
+            {'queryset': ClothAdvertisement.objects.filter(owner = self.request.user.id), 'serializer_class':ClothesAdvertisementSerializer },]
         
         return  querylist; 
         
+
+
+
+		
+	
+		
+		
+	# except(TypeError, ValueError, OverflowError, Token.DoesNotExist):
+	# 	token1=None
+	# 	return Response('Token is invalid or expired. Please request another confirmation email by signing in.', status=status.HTTP_400_BAD_REQUEST)
+	
+	# except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
+	# 	user = None 
+	# 	if user is None:
+	# 		return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
+	
 
 
 
@@ -92,3 +110,46 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
     serializer_class = BaseAdvertisementPolymorphicSerializer
     queryset = BaseAdvertisement.objects.all()
     lookup_field = 'id'
+
+#with bug 
+
+class adDetail(viewsets.ModelViewSet):
+    # queryset = Comment.objects.all()
+    serializer_class =  BaseAdvertisementPolymorphicSerializer
+    permission_classes = [IsAuthenticated, IsOwner]
+          
+    def get_object(self):
+        pk =  self.request.GET.get("id") 
+        print(pk)
+        object = None
+        try: 
+            food = FoodAdvertisement.objects.get(id= pk)
+            object = food
+
+        except: 
+                object = None
+            
+        try:
+            service = ServiceAdvertisement.objects.get(id= pk)
+            object = service
+        except: 
+            object = None
+            
+
+        try:
+            cloth = ClothAdvertisement.objects.get(id= pk)
+            object = cloth
+        except: 
+            object = None
+
+        try:
+            animaal = AnimalAdvertisement.objects.get(id = pk)
+            object = cloth
+        except: 
+            object = None
+      
+        return object
+
+
+
+
