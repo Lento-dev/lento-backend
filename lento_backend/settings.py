@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'drf_social_oauth2',
     'advertisement', 
     'drf_multiple_model',
-
+    'polymorphic',
+    
 ]
 
 REST_FRAMEWORK = {

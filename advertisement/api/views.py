@@ -1,11 +1,15 @@
 from venv import create
-from rest_framework import generics,status , viewsets
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from .serializers import Advertisement , ServiceAd, FoodAd , animalAd , clothesAd 
 from advertisement.models import BaseAdvertisement , ServiceAdvertisement , FoodAdvertisement , AnimalAdvertisement ,ClothAdvertisement
 from drf_multiple_model.views import ObjectMultipleModelAPIView
-
+from rest_framework import generics, status, viewsets
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.response import Response
+from .serializers import BaseAdvertisementSerializer, ServiceAdvertisementSerializer, FoodAdvertisementSerializer, \
+    AnimalAdvertisementSerializer, ClothesAdvertisementSerializer, BaseAdvertisementPolymorphicSerializer
+from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAdvertisement, AnimalAdvertisement, \
+    ClothAdvertisement
+from advertisement.permissions import IsOwner
 
 
 class HomeAPIView(ObjectMultipleModelAPIView):
@@ -22,9 +26,11 @@ class HomeAPIView(ObjectMultipleModelAPIView):
         return  querylist; 
         
 
+
+
 class Foodcreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = FoodAd
+    serializer_class = FoodAdvertisementSerializer
     queryset = FoodAdvertisement.objects.all()
 
 
@@ -39,7 +45,7 @@ class Foodcreate(generics.CreateAPIView, viewsets.ModelViewSet):
 
 class Servicecreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = ServiceAd
+    serializer_class = ServiceAdvertisementSerializer
     queryset = ServiceAdvertisement.objects.all()
     def create(self, request, *args, **kwargs):
         serializer_data = request.data.copy()
@@ -53,7 +59,7 @@ class Servicecreate(generics.CreateAPIView, viewsets.ModelViewSet):
 
 class animalcreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = animalAd
+    serializer_class = AnimalAdvertisementSerializer
     queryset = AnimalAdvertisement.objects.all()
 
 
@@ -68,7 +74,7 @@ class animalcreate(generics.CreateAPIView, viewsets.ModelViewSet):
 
 class clothcreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
-    serializer_class = clothesAd
+    serializer_class = ClothesAdvertisementSerializer
     queryset = ClothAdvertisement.objects.all()
 
     def create(self, request, *args, **kwargs):
@@ -81,54 +87,8 @@ class clothcreate(generics.CreateAPIView, viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+class AdvertisementViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = BaseAdvertisementPolymorphicSerializer
+    queryset = BaseAdvertisement.objects.all()
+    lookup_field = 'id'

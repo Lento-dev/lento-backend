@@ -1,39 +1,50 @@
-from typing_extensions import Required
-from rest_framework import serializers 
-from advertisement.models import BaseAdvertisement ,FoodAdvertisement , ServiceAdvertisement , AnimalAdvertisement, ClothAdvertisement
+from rest_framework import serializers
+from advertisement.models import BaseAdvertisement, FoodAdvertisement, ServiceAdvertisement, AnimalAdvertisement, \
+    ClothAdvertisement
+from rest_polymorphic.serializers import PolymorphicSerializer
 
-class Advertisement(serializers.ModelSerializer):
+
+class BaseAdvertisementSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.email')
-    Image = serializers.ImageField(required = False)
+    Image = serializers.ImageField(required=False)
+
     class Meta:
-
         model = BaseAdvertisement
-        fields = ('id' , 'Title' , 'Description' , 'Image' , 'province' , 'City','Address' , 'owner' )
-      
+        fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner')
 
 
-
-class ServiceAd(serializers.ModelSerializer):
+class ServiceAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceAdvertisement
-        fields = Advertisement.Meta.fields + ('service_type' , 'expiration_date' )
-        
-      
-class FoodAd(serializers.ModelSerializer):
+        fields = BaseAdvertisementSerializer.Meta.fields + ('service_type', 'expiration_date')
+
+
+class FoodAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = FoodAdvertisement
-        fields = Advertisement.Meta.fields + ('Food_type' , 'expiration_date' )
-      
+        fields = BaseAdvertisementSerializer.Meta.fields + ('Food_type', 'expiration_date')
 
-class animalAd(serializers.ModelSerializer):
+
+class AnimalAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnimalAdvertisement
-        fields = Advertisement.Meta.fields + ('animal_breed' , 'animal_age' , 'Health' , 'handingover_reason' )
-      
+        fields = BaseAdvertisementSerializer.Meta.fields + (
+            'animal_breed', 'animal_age', 'Health', 'handingover_reason')
 
-class clothesAd(serializers.ModelSerializer):
+
+class ClothesAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClothAdvertisement
-        fields =  fields = Advertisement.Meta.fields + ('cloth_type' , 'expiration_date' , 'cloth_status'
-         , 'cloth_size' , 'for_men' , 'for_women' , 'for_kids' , 'unlimited' )
-      
+        fields = BaseAdvertisementSerializer.Meta.fields + ('cloth_type', 'expiration_date', 'cloth_status'
+                                                            , 'cloth_size', 'for_men', 'for_women', 'for_kids',
+                                                            'unlimited')
+
+
+class BaseAdvertisementPolymorphicSerializer(PolymorphicSerializer):
+    model_serializer_mapping = {
+        BaseAdvertisement: BaseAdvertisementSerializer,
+        ServiceAdvertisement: ServiceAdvertisementSerializer,
+        FoodAdvertisement: FoodAdvertisementSerializer,
+        AnimalAdvertisement: AnimalAdvertisementSerializer,
+        ClothAdvertisement: ClothesAdvertisementSerializer
+    }
