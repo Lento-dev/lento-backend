@@ -7,11 +7,8 @@ urlpatterns = [
     path('addanimal/', views.animalcreate.as_view({'post': 'create'}), name='addanimal'),
     path('addservice/', views.Servicecreate.as_view({'post': 'create'}), name='addservice'),
     path('addcloth/', views.clothcreate.as_view({'post': 'create'}), name='addcloth'),
-    path('delete/<id>/', views.DeleteAdvertisementView.as_view(), name='delete'),
-    path('update-clothes/<id>/', views.UpdateClothesAdvertisementView.as_view(), name='update-clothes'),
-    path('update-food/<id>/', views.UpdateFoodAdvertisementView.as_view(), name='update-food'),
-    path('update-animal/<id>/', views.UpdateAnimalAdvertisementView.as_view(), name='update-animal'),
-    path('update-service/<id>/', views.UpdateServiceAdvertisementView.as_view(), name='update-service'),
+    path('update/<id>/', views.AdvertisementViewSet.as_view({'put': 'update'}), name='update-advertisement'),
+    path('delete/<id>/', views.AdvertisementViewSet.as_view({'delete': 'destroy'}), name='delete-advertisement'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
