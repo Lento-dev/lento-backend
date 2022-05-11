@@ -18,7 +18,7 @@ class BaseAdvertisement(models.Model):
     City = models.CharField(max_length= 100 , blank= True , null=True)
     Address = models.CharField(max_length=500 , blank=True , null=True)
     owner  = models.ForeignKey('user_account.Account', related_name='advertisement_owner', on_delete=models.CASCADE, blank=True )
-
+    
 
 
 class ClothAdvertisement(BaseAdvertisement):   
@@ -58,3 +58,23 @@ class ServiceAdvertisement(BaseAdvertisement):
                      ('Psychology', 'Psychology')]
     service_type = models.CharField(max_length=20, choices=service_types, blank=True)
     expiration_date = models.DateField(max_length=8, null=True, blank=True)
+
+
+
+class Comment(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
+    body = models.TextField(blank=False)
+    owner = models.ForeignKey('user_account.Account', related_name='comments', on_delete=models.CASCADE)
+    post = models.ForeignKey('advertisement.BaseAdvertisement', related_name='comments', on_delete=models.CASCADE)
+    # parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='replies')
+    class Meta:
+        ordering = ['created']
+
+class Saved(models.Model):
+
+    user = models.ForeignKey('user_account.Account', related_name='user', on_delete=models.CASCADE, blank=True)
+    post = models.ForeignKey('advertisement.BaseAdvertisement', related_name='post', on_delete=models.CASCADE, blank=True)
+    saved = models.BooleanField(default=True, blank=True, null=True)
+    
+    def str(self):
+        return self.post
