@@ -1,17 +1,13 @@
-# from urllib import request
-# from venv import create
-# from winreg import QueryInfoKey
-# from xxlimited import foo
-# from drf_multiple_model.views import ObjectMultipleModelAPIView
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from django_filters import rest_framework as django_filters
 from .serializers import BaseAdvertisementSerializer, ServiceAdvertisementSerializer, FoodAdvertisementSerializer, \
     AnimalAdvertisementSerializer, ClothesAdvertisementSerializer, BaseAdvertisementPolymorphicSerializer
 from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAdvertisement, AnimalAdvertisement, \
     ClothAdvertisement
 from advertisement.permissions import IsOwner
+from advertisement.filtersets import AdvertisementFilterSet
 
 class Foodcreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -78,16 +74,19 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
     queryset = BaseAdvertisement.objects.all()
     lookup_field = 'id'
 
+
+class SearchAdvertisementView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = BaseAdvertisementPolymorphicSerializer
+    queryset = BaseAdvertisement.objects.all()
+    filter_backends = [filters.SearchFilter, django_filters.DjangoFilterBackend]
+    filterset_class = AdvertisementFilterSet
+    search_fields = ['Title']
+
+
 class LoadViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwner]
     serializer_class = BaseAdvertisementPolymorphicSerializer
     lookup_field = 'id'
     def get_queryset(self): 
         return BaseAdvertisement.objects.filter(owner = self.request.user.id)
-
-
-
-
-
-
-
