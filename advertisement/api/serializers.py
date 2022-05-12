@@ -1,16 +1,16 @@
 from rest_framework import serializers
 from advertisement.models import BaseAdvertisement, FoodAdvertisement, ServiceAdvertisement, AnimalAdvertisement, \
-    ClothAdvertisement
+    ClothAdvertisement ,  Comment,Saved
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 
 class BaseAdvertisementSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.email')
-    Image = serializers.ImageField(required=False)
-
+    Image = serializers.ImageField(required = False)
+    comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True )
     class Meta:
         model = BaseAdvertisement
-        fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner')
+        fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner' , 'comments')
 
 
 class ServiceAdvertisementSerializer(serializers.ModelSerializer):
@@ -48,3 +48,22 @@ class BaseAdvertisementPolymorphicSerializer(PolymorphicSerializer):
         AnimalAdvertisement: AnimalAdvertisementSerializer,
         ClothAdvertisement: ClothesAdvertisementSerializer
     }
+      
+
+class CommentSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username')
+
+   
+    class Meta:
+        model = Comment
+        fields = ['id', 'body', 'owner', 'post' ]
+
+
+class SavedSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = Saved
+        fields = "__all__"
+
+
