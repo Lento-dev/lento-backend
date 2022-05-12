@@ -2,6 +2,7 @@ from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 
+from .filtersets import AdvertisementFilterSet
 from .models import BaseAdvertisement, ClothAdvertisement, ServiceAdvertisement, AnimalAdvertisement, FoodAdvertisement
 from .api import views
 from user_account.models import Account
@@ -88,3 +89,47 @@ class AdvertisementsTest(TestCase):
         response = view(request, id=test_ad.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertListEqual([response.data['Title'], response.data['service_type']], ['updated-title', 'dentistry'])
+
+    def test_filter_set(self):
+        test_clothes_ad = ClothAdvertisement.objects.create(Title='test-cloth', owner=self.test_user,
+                                                            expiration_date='2022-01-01')
+        test_food_ad = FoodAdvertisement.objects.create(Title='test-food', owner=self.test_user,
+                                                        expiration_date='2022-01-01')
+        test_animal_ad = AnimalAdvertisement.objects.create(Title='test-animal', owner=self.test_user,
+                                                            animal_breed='dog')
+        test_service_ad = ServiceAdvertisement.objects.create(Title='test-service', owner=self.test_user,
+                                                              expiration_date='2022-01-01')
+        cloth_filter_set = AdvertisementFilterSet(data={'ad_type': 'ClothAdvertisement'},
+                                                  queryset=BaseAdvertisement.objects.all())
+        self.assertEqual(cloth_filter_set.qs.first().id, test_clothes_ad.id)
+        food_filter_set = AdvertisementFilterSet(data={'ad_type': 'FoodAdvertisement'},
+                                                 queryset=BaseAdvertisement.objects.all())
+        self.assertEqual(food_filter_set.qs.first().id, test_food_ad.id)
+        animal_filter_set = AdvertisementFilterSet(data={'ad_type': 'AnimalAdvertisement'},
+                                                   queryset=BaseAdvertisement.objects.all())
+        self.assertEqual(animal_filter_set.qs.first().id, test_animal_ad.id)
+        service_filter_set = AdvertisementFilterSet(data={'ad_type': 'ServiceAdvertisement'},
+                                                    queryset=BaseAdvertisement.objects.all())
+        self.assertEqual(service_filter_set.qs.first().id, test_service_ad.id)
+        clothes_expiration_date_filter_set = AdvertisementFilterSet(
+            data={'clothadvertisement__expiration_date__gte': '2021-01-01'}, queryset=BaseAdvertisement.objects.all())
+        self.assertEqual(clothes_expiration_date_filter_set.qs.first().id, test_clothes_ad.id)
+        food_expiration_date_filter_set = AdvertisementFilterSet(
+            data={'foodadvertisement__expiration_date__lte': '2022-01-02'}, queryset=BaseAdvertisement.objects.all())
+        self.assertEqual(food_expiration_date_filter_set.qs.first().id, test_food_ad.id)
+        service_expiration_date_filter_set = AdvertisementFilterSet(
+            data={'serviceadvertisement__expiration_date__gte': '2021-01-01'},
+            queryset=BaseAdvertisement.objects.all())
+        self.assertEqual(service_expiration_date_filter_set.qs.first().id, test_service_ad.id)
+        animal_breed_filter_set = AdvertisementFilterSet(data={'animaladvertisement__animal_breed': 'dog'},
+                                                         queryset=BaseAdvertisement.objects.all())
+        self.assertEqual(animal_breed_filter_set.qs.first().id, test_animal_ad.id)
+
+    def test_search_advertisement_view(self):
+        test_ad1 = ClothAdvertisement.objects.create(Title='test-cloth', owner=self.test_user)
+        test_ad2 = FoodAdvertisement.objects.create(Title='test-food', owner=self.test_user)
+        view = views.SearchAdvertisementView.as_view()
+        request = self.factory.get('/advertisement/search/?search=cloth', {'search': 'cloth'})
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data[0]['id'], test_ad1.id)

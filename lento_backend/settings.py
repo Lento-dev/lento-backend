@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'drf_social_oauth2',
     'advertisement',
     'polymorphic',
+    'django_filters'
 ]
 
 REST_FRAMEWORK = {

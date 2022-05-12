@@ -1,11 +1,13 @@
-from rest_framework import generics, status, viewsets
+from rest_framework import generics, status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from django_filters import rest_framework as django_filters
 from .serializers import BaseAdvertisementSerializer, ServiceAdvertisementSerializer, FoodAdvertisementSerializer, \
     AnimalAdvertisementSerializer, ClothesAdvertisementSerializer, BaseAdvertisementPolymorphicSerializer
 from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAdvertisement, AnimalAdvertisement, \
     ClothAdvertisement
 from advertisement.permissions import IsOwner
+from advertisement.filtersets import AdvertisementFilterSet
 
 
 class Foodcreate(generics.CreateAPIView, viewsets.ModelViewSet):
@@ -72,3 +74,12 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
     serializer_class = BaseAdvertisementPolymorphicSerializer
     queryset = BaseAdvertisement.objects.all()
     lookup_field = 'id'
+
+
+class SearchAdvertisementView(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = BaseAdvertisementPolymorphicSerializer
+    queryset = BaseAdvertisement.objects.all()
+    filter_backends = [filters.SearchFilter, django_filters.DjangoFilterBackend]
+    filterset_class = AdvertisementFilterSet
+    search_fields = ['Title']
