@@ -13,39 +13,6 @@ from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAd
     ClothAdvertisement
 from advertisement.permissions import IsOwner
 
-
-class HomeAPIView(ObjectMultipleModelAPIView):
-    permission_classes = [IsAuthenticated]
-    pagination_class = None
-    
-        
-    def get_querylist(self):
-        querylist = [
-            {'queryset': FoodAdvertisement.objects.filter(owner = self.request.user.id ), 'serializer_class':  FoodAdvertisementSerializer},
-            {'queryset': ServiceAdvertisement.objects.filter(owner = self.request.user.id), 'serializer_class': ServiceAdvertisementSerializer},
-            {'queryset': ClothAdvertisement.objects.filter(owner = self.request.user.id), 'serializer_class':ClothesAdvertisementSerializer },]
-        
-        return  querylist; 
-        
-
-
-
-		
-	
-		
-		
-	# except(TypeError, ValueError, OverflowError, Token.DoesNotExist):
-	# 	token1=None
-	# 	return Response('Token is invalid or expired. Please request another confirmation email by signing in.', status=status.HTTP_400_BAD_REQUEST)
-	
-	# except(TypeError, ValueError, OverflowError, Account.DoesNotExist):
-	# 	user = None 
-	# 	if user is None:
-	# 		return Response('User not found', status=status.HTTP_400_BAD_REQUEST)
-	
-
-
-
 class Foodcreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = FoodAdvertisementSerializer
@@ -111,44 +78,15 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
     queryset = BaseAdvertisement.objects.all()
     lookup_field = 'id'
 
-#with bug 
-
-class adDetail(viewsets.ModelViewSet):
-    # queryset = Comment.objects.all()
-    serializer_class =  BaseAdvertisementPolymorphicSerializer
+class LoadViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated, IsOwner]
-          
-    def get_object(self):
-        pk =  self.request.GET.get("id") 
-        print(pk)
-        object = None
-        try: 
-            food = FoodAdvertisement.objects.get(id= pk)
-            object = food
+    serializer_class = BaseAdvertisementPolymorphicSerializer
+    lookup_field = 'id'
+    def get_queryset(self): 
+        return BaseAdvertisement.objects.filter(owner = self.request.user.id)
 
-        except: 
-                object = None
-            
-        try:
-            service = ServiceAdvertisement.objects.get(id= pk)
-            object = service
-        except: 
-            object = None
-            
 
-        try:
-            cloth = ClothAdvertisement.objects.get(id= pk)
-            object = cloth
-        except: 
-            object = None
 
-        try:
-            animaal = AnimalAdvertisement.objects.get(id = pk)
-            object = cloth
-        except: 
-            object = None
-      
-        return object
 
 
 
