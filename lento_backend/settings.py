@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'social_django',
     'drf_social_oauth2',
-    'advertisement',
+    'advertisement', 
     'polymorphic',
     'django_filters'
 ]

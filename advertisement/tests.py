@@ -30,6 +30,29 @@ class AdvertisementsTest(TestCase):
         self.assertEqual(response.data['cloth_type'], 'pants')
         self.assertEqual(response.data['for_men'], True)
 
+    
+    def test_Add_ServiceAdvertisement_user(self):
+        view = views.Servicecreate.as_view({'post': 'create'})
+        request = self.factory.post('/advertisement/addservice/',
+                                    data={'Title': 'test', 'service_type': 'medical'})
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['Title'], 'test')
+        self.assertEqual(response.data['service_type'], 'medical')
+
+
+    def test_Add_FoodAdvertisement_user(self):
+        view = views.Foodcreate.as_view({'post': 'create'})
+        request = self.factory.post('/advertisement/addfood/',
+                                    data={'Title': 'test', 'Food_type': 'fastfood'})
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['Title'], 'test')
+        self.assertEqual(response.data['Food_type'], 'fastfood')
+
+
     def test_delete_advertisement(self):
         test_ad = BaseAdvertisement.objects.create(Title='test-title', owner=self.test_user)
         view = views.AdvertisementViewSet.as_view({'delete': 'destroy'})
@@ -133,3 +156,31 @@ class AdvertisementsTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0]['id'], test_ad1.id)
+
+    def test_load_advertisement(self):
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        test_ad3 = ServiceAdvertisement.objects.create(Title='test-title', owner=self.test_user, service_type='medical')
+        test_ad2 = AnimalAdvertisement.objects.create(Title='test-title', owner=self.test_user,animal_breed='cat')
+        test_ad1 = ClothAdvertisement.objects.create(Title='test-title', owner=self.test_user, cloth_type='hat')
+        test_ad4 = ClothAdvertisement.objects.create(Title='test-titlex', owner= test_user2, cloth_type='hat')
+        baseID = {test_ad1.id , test_ad2.id , test_ad3.id,test_ad4.id}
+        view = views.LoadViewSet.as_view({'get': 'list'})
+        request = self.factory.get('/advertisement/load-all/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+    
+        for ad in response.data : 
+            self.assertEqual(ad['owner'], self.test_user.id)
+            if ad['id'] not in baseID: 
+                return AssertionError.__context__
+
+    def test_retrieve_advertisement(self):
+        test_ad3 = ServiceAdvertisement.objects.create(Title='test-title', owner=self.test_user, service_type='medical')
+        view = views.AdvertisementViewSet.as_view({'get': 'retrieve'})
+        request = self.factory.get(f'/advertisement/retrieve/<{test_ad3.id}>/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request , id = test_ad3.id )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['Title'] ,'test-title' )
+        self.assertEqual(response.data['service_type'] ,'medical' )

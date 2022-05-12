@@ -9,7 +9,6 @@ from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAd
 from advertisement.permissions import IsOwner
 from advertisement.filtersets import AdvertisementFilterSet
 
-
 class Foodcreate(generics.CreateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = FoodAdvertisementSerializer
@@ -83,3 +82,11 @@ class SearchAdvertisementView(generics.ListAPIView):
     filter_backends = [filters.SearchFilter, django_filters.DjangoFilterBackend]
     filterset_class = AdvertisementFilterSet
     search_fields = ['Title']
+
+
+class LoadViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = BaseAdvertisementPolymorphicSerializer
+    lookup_field = 'id'
+    def get_queryset(self): 
+        return BaseAdvertisement.objects.filter(owner = self.request.user.id)

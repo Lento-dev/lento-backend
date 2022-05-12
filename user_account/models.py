@@ -39,6 +39,7 @@ class Account(AbstractUser):
     education = models.CharField(max_length=30, null=True, blank=True)
     region = models.CharField(max_length=30, null=True, blank=True)
     experience = models.CharField(max_length=30, null=True, blank=True)
+   
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
