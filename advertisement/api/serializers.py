@@ -6,7 +6,7 @@ from rest_polymorphic.serializers import PolymorphicSerializer
 
 class BaseAdvertisementSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.email')
-    Image = serializers.ImageField(required = False)
+    Image = serializers.FileField(required = False)
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True )
     class Meta:
         model = BaseAdvertisement

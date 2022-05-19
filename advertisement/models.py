@@ -9,7 +9,6 @@ def upload_location(instance, filename, **kwargs):
     )
     return file_path
 
-
 class BaseAdvertisement(PolymorphicModel):
     Title = models.CharField(max_length=100, blank=True, null=True)
     Description = models.CharField(max_length=1000, blank=True, null=True)
