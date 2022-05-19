@@ -16,6 +16,8 @@ class BaseAdvertisement(PolymorphicModel):
     province = models.CharField(max_length=100, blank=True, null=True)
     City = models.CharField(max_length=100, blank=True, null=True)
     Address = models.CharField(max_length=500, blank=True, null=True)
+    date_joined	= models.DateTimeField(verbose_name='date joined', auto_now_add=True)
+
     owner = models.ForeignKey('user_account.Account', related_name='advertisement_owner', on_delete=models.CASCADE,
                               blank=True)
 
