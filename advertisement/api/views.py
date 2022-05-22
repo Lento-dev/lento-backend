@@ -74,6 +74,13 @@ class AdvertisementViewSet(viewsets.ModelViewSet):
     serializer_class = BaseAdvertisementPolymorphicSerializer
     queryset = BaseAdvertisement.objects.all()
     lookup_field = 'id'
+    
+
+class AdvertisementViewSetreturn(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsOwner]
+    serializer_class = BaseAdvertisementPolymorphicSerializer
+    queryset = BaseAdvertisement.objects.all()
+    lookup_field = 'id'
     def get_queryset(self):
         return BaseAdvertisement.objects.order_by('date_joined')[:20]
 
