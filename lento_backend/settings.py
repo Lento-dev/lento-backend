@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'rest_framework',
     'corsheaders',
     'user_account',
@@ -50,7 +51,9 @@ INSTALLED_APPS = [
     'drf_social_oauth2',
     'advertisement', 
     'polymorphic',
-    'django_filters'
+    'django_filters',
+    'chat',
+    
 ]
 
 REST_FRAMEWORK = {
@@ -103,6 +106,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'lento_backend.wsgi.application'
+ASGI_APPLICATION = 'lento_backend.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 AUTH_USER_MODEL = 'user_account.Account'
 
