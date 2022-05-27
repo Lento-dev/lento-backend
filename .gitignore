@@ -384,3 +384,5 @@ pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,venv,pycharm,django
 media_cdn/
+nginx/lento-frontend/
+nginx/lento-frontend/*
