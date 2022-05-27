@@ -10,7 +10,7 @@ services:
       - "8000:8000"
     environment:
       DB_HOST: "db"
-      DEPLOY: 0 # set this to 0 for development
+      DJANGO_DEPLOYMENT: 1 # set this to 0 for development
       FRONTEND_HOST: "http://localhost:3000"
     depends_on:
       - db
