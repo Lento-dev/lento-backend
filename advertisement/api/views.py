@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django_filters import rest_framework as django_filters
 from .serializers import BaseAdvertisementSerializer, ServiceAdvertisementSerializer, FoodAdvertisementSerializer, \
     AnimalAdvertisementSerializer, ClothesAdvertisementSerializer, BaseAdvertisementPolymorphicSerializer ,  CommentSerializer , SavedSerializer
-from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAdvertisement, AnimalAdvertisement, \
+from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAdvertisement, AnimalAdvertisement,  \
     ClothAdvertisement  ,Comment , Saved
 from advertisement.permissions import IsOwner
 from django.shortcuts import render, get_object_or_404, redirect
@@ -190,6 +190,9 @@ class savedview( viewsets.ModelViewSet):
             data = {'status':'bad data format'}
             s = status.HTTP_400_BAD_REQUEST
         return  Response(data, s)
+
+
+
 
 
 
