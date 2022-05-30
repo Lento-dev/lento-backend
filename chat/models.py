@@ -8,7 +8,7 @@ class Contact(models.Model):
     friends = models.ManyToManyField('self', blank=True)
 
     def __str__(self):
-        return self.user.username
+        return self.user.email
 
 
 class Message(models.Model):
@@ -18,7 +18,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.contact.user.username
+        return self.contact.user.email
 
 
 class Chat(models.Model):
