@@ -6,7 +6,8 @@ from .filtersets import AdvertisementFilterSet
 from .models import BaseAdvertisement, ClothAdvertisement, ServiceAdvertisement, AnimalAdvertisement, FoodAdvertisement
 from .api import views
 from user_account.models import Account
-import datetime
+from django.utils.timezone import datetime
+
 
 
 class AdvertisementsTest(TestCase):
