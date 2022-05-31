@@ -6,6 +6,7 @@ from .filtersets import AdvertisementFilterSet
 from .models import BaseAdvertisement, ClothAdvertisement, ServiceAdvertisement, AnimalAdvertisement, FoodAdvertisement
 from .api import views
 from user_account.models import Account
+import datetime
 
 
 class AdvertisementsTest(TestCase):
@@ -184,3 +185,31 @@ class AdvertisementsTest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['Title'] ,'test-title' )
         self.assertEqual(response.data['service_type'] ,'medical' )
+
+    def sort_advertisement(self): 
+        datetime1 = d = datetime(2015, 10, 11, 23, 55, 59, 342380)
+        datetime2 = datetime(2013, 10, 10, 23, 55, 59, 342379)
+        datetime3= datetime(2020, 10, 12, 23, 55, 59, 342394)
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1' , date_joined = datetime1)
+        test_ad2 = ServiceAdvertisement.objects.create(Title='test-title2', owner=self.test_user, service_type='medical2' , date_joined = datetime2)
+        test_ad3 = AnimalAdvertisement.objects.create(Title='test-titlea3', owner=self.test_user, animal_breed='cat' , date_joined = datetime3)
+        view = views.AdvertisementViewSetreturn.as_view({'get': 'list'})
+        request = self.factory.get('/advertisement/homepageads/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        i = 0
+
+        for ad in response.data : 
+           if i < 2:
+               j = i+1
+               if ad['date_joined'] < response.data[j]['date_joined']:
+                    return AssertionError.__context__
+               i += 1
+
+    
+      
+
+        
+
+
