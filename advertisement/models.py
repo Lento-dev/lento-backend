@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.db import models
 from polymorphic.models import PolymorphicModel
 
@@ -18,8 +19,8 @@ class BaseAdvertisement(PolymorphicModel):
     Address = models.CharField(max_length=500, blank=True, null=True)
     date_joined	= models.DateTimeField(verbose_name='date joined', auto_now_add=True)
 
-    owner = models.ForeignKey('user_account.Account', related_name='advertisement_owner', on_delete=models.CASCADE,
-                              blank=True)
+    owner = models.ForeignKey('user_account.Account', related_name='advertisement_owner', on_delete=models.CASCADE)
+    ad_expire_date = models.DateTimeField(default=datetime.now() + timedelta(days=7), null=True, blank=True)
 
 
 class ClothAdvertisement(BaseAdvertisement):
