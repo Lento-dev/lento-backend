@@ -1,10 +1,10 @@
 from pathlib import Path
 import os
 
-DEPLOY = int(os.environ.get('DEPLOY', default=0))
+DEPLOY = int(os.environ.get('DJANGO_DEPLOYMENT', default=0))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&3*t78^qjv+_&0)r1oy016jie+qnq_fkdkvku-y$g=iw*btbe#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False if DEPLOY else True
 
 ALLOWED_HOSTS = ['*']
 
@@ -154,12 +154,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    os.path.join(BASE_DIR, 'media'),
-]
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'static'),
+#     os.path.join(BASE_DIR, 'media'),
+# ]
+STATIC_URL = '/static_cdn/'
+MEDIA_URL = '/media_cdn/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn')
 TEMP = os.path.join(BASE_DIR, 'temp')
