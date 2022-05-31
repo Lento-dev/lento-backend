@@ -6,16 +6,17 @@ services:
     command: bash -c "bash /code/docker-entrypoint.sh"
     tty: true
     stdin_open: true
-    ports:
-      - "8000:8000"
+    expose:
+      - 8000
     environment:
       DB_HOST: "db"
-      DEPLOY: 0 # set this to 0 for development
-      FRONTEND_HOST: "http://localhost:3000"
+      DJANGO_DEPLOYMENT: 1 # set this to 0 for development
+      FRONTEND_HOST: "http://172.17.3.154"
     depends_on:
       - db
     volumes:
-      - ./:/code
+      - static_volume:/code/static_cdn
+      - media_volume:/code/media_cdn
   db:
     image: postgres:alpine
     environment:
@@ -25,6 +26,17 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
       - "5432:5432"
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+    volumes:
+      - static_volume:/code/static_cdn
+      - media_volume:/code/media_cdn
+    depends_on:
+      - lento-backend
 
 volumes:
   postgres_data:
+  static_volume:
+  media_volume:
