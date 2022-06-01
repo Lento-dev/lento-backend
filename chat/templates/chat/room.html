@@ -114,8 +114,11 @@
 <script src="{% static 'reconnecting-websocket.js' %}"></script>
 <script>
 
-const roomName = '{{room_name_json }}';
-const username = '{{ username }}';
+// const roomName = '{{room_name_json }}';
+// const username = '{{ username }}';
+var roomName = {{ room_name_json }};
+var username = {{ username }};
+
 
   var chatSocket = new ReconnectingWebSocket(
         'ws://' + window.location.host +

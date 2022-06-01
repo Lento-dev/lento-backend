@@ -10,10 +10,13 @@ from rest_framework.generics import (
 )
 from chat.models import Chat, Contact
 from chat.views import get_user_contact
-from .serializers import ChatSerializer
+from .serializers import ChatSerializer , ContactSerializer
 
 User = get_user_model()
 
+
+# class contactCreateView(createAPIview): 
+#     serializer_class = ContactSerializer
 
 class ChatListView(ListAPIView):
     serializer_class = ChatSerializer
