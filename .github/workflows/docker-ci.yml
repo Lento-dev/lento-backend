@@ -11,10 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Pull frontend
+        run: |
+          cd nginx
+          git clone https://github.com/Lento-dev/lento-frontend.git
+          cd lento-frontend
+          git checkout develop
       - name: Build images
         run: |
-          docker-compose up -d --build
+          docker-compose -f docker-compose-prod.yaml up -d --build
 
       - name: Run tests
         run: |
-          docker-compose exec -T lento-backend python manage.py test
+          docker-compose exec -T lento-backend python3 manage.py test
