@@ -65,10 +65,23 @@ class BaseAdvertisementSerializer(serializers.ModelSerializer):
         fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner' , 'comments' , 'date_joined')
 
 
+class UpdateAdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BaseAdvertisement
+        fields = (
+            'id', 'Title', 'Description', 'Image', 'province', 'City', 'Address')
+
+
 class ServiceAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceAdvertisement
         fields = BaseAdvertisementSerializer.Meta.fields + ('service_type', 'expiration_date')
+
+
+class UpdateServiceAdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceAdvertisement
+        fields = UpdateAdvertisementSerializer.Meta.fields + ('service_type', 'expiration_date')
 
 
 class FoodAdvertisementSerializer(serializers.ModelSerializer):
@@ -77,10 +90,23 @@ class FoodAdvertisementSerializer(serializers.ModelSerializer):
         fields = BaseAdvertisementSerializer.Meta.fields + ('Food_type', 'expiration_date')
 
 
+class UpdateFoodAdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FoodAdvertisement
+        fields = UpdateAdvertisementSerializer.Meta.fields + ('Food_type', 'expiration_date')
+
+
 class AnimalAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnimalAdvertisement
         fields = BaseAdvertisementSerializer.Meta.fields + (
+            'animal_breed', 'animal_age', 'Health', 'handingover_reason')
+
+
+class UpdateAnimalAdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AnimalAdvertisement
+        fields = UpdateAdvertisementSerializer.Meta.fields + (
             'animal_breed', 'animal_age', 'Health', 'handingover_reason')
 
 
@@ -92,6 +118,14 @@ class ClothesAdvertisementSerializer(serializers.ModelSerializer):
                                                             'unlimited')
 
 
+class UpdateClothesAdvertisementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClothAdvertisement
+        fields = UpdateAdvertisementSerializer.Meta.fields + ('cloth_type', 'expiration_date', 'cloth_status',
+                                                              'cloth_size', 'for_men', 'for_women', 'for_kids',
+                                                              'unlimited')
+
+
 class BaseAdvertisementPolymorphicSerializer(PolymorphicSerializer):
     model_serializer_mapping = {
         BaseAdvertisement: BaseAdvertisementSerializer,
@@ -100,7 +134,17 @@ class BaseAdvertisementPolymorphicSerializer(PolymorphicSerializer):
         AnimalAdvertisement: AnimalAdvertisementSerializer,
         ClothAdvertisement: ClothesAdvertisementSerializer
     }
-      
+
+
+class UpdateBaseAdvertisementPolymorphicSerializer(PolymorphicSerializer):
+    model_serializer_mapping = {
+        BaseAdvertisement: UpdateAdvertisementSerializer,
+        ServiceAdvertisement: UpdateServiceAdvertisementSerializer,
+        FoodAdvertisement: UpdateFoodAdvertisementSerializer,
+        AnimalAdvertisement: UpdateAnimalAdvertisementSerializer,
+        ClothAdvertisement: UpdateClothesAdvertisementSerializer
+    }
+
 
 class CommentSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')

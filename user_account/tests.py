@@ -36,3 +36,11 @@ class UserAccountViewsTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['first_name'], 'test')
+
+    def test_update_user_email(self):
+        view = views.UserProfileRetrieveUpdateView.as_view({'put': 'update'})
+        request = self.factory.put('/api/account/edit-profile/', data={'email': 'test@email.com'})
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['email'], 'test@email.com')

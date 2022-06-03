@@ -10,5 +10,5 @@ class UserProfileSerializer(serializers.ModelSerializer):
             'city', 'country', 'job', 'gender', 'education', 'date_joined', 'experience', 'region'
         )
         extra_kwargs = {
-            'username': {'read_only': True}, 'email': {'read_only': True},
+            'username': {'read_only': True}, 'email': {'required': False},
         }
