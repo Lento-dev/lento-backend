@@ -34,21 +34,21 @@ class ChatListView(ListAPIView):
 class ChatDetailView(RetrieveAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
-    permission_classes = (IsAuthenticated )
+    permission_classes = ()
 
 class ChatCreateView(CreateAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
-    permission_classes = (IsAuthenticated )
+    permission_classes = ()
 
 
 class ChatUpdateView(UpdateAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
-    permission_classes = (IsAuthenticated )
+    permission_classes = ()
 
 
 class ChatDeleteView(DestroyAPIView):
     queryset = Chat.objects.all()
     serializer_class = ChatSerializer
-    permission_classes = (IsAuthenticated )
+    permission_classes = ()
