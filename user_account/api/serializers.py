@@ -12,3 +12,16 @@ class UserProfileSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'username': {'read_only': True}, 'email': {'read_only': True},
         }
+
+
+class UserProfileSerializerWithoutphone(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = (
+            'username', 'email', 'image', 'cover', 'first_name', 'last_name', 'bio', 'date_birth', 'province',
+            'city', 'country', 'job', 'gender', 'education', 'date_joined', 'experience', 'region'
+        )
+        extra_kwargs = {
+            'username': {'read_only': True}, 'email': {'read_only': True},
+        }
+
