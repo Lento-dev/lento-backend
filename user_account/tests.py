@@ -44,3 +44,12 @@ class UserAccountViewsTest(TestCase):
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['email'], 'test@email.com')
+
+    def test_public_profile(self):
+        test_user = Account.objects.create_user('test_user2', "test2@example.com", "123456")
+        view = views.PublicUserProfileView.as_view({'get': 'retrieve'})
+        request = self.factory.get(f'/api/account/public-profile/{test_user.id}/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request, id=test_user.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'], 'test_user2')
