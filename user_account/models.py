@@ -31,15 +31,12 @@ class Account(AbstractUser):
     bio = models.CharField(max_length=100, null=True, blank=True)
     phone = PhoneNumberField(null=True, blank=True)
     date_birth = models.DateField(max_length=8, null=True, blank=True)
-    province = models.CharField(max_length=30, null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
     country = models.CharField(max_length=30, null=True, blank=True)
     job = models.CharField(max_length=30, null=True, blank=True)
     gender = models.CharField(max_length=7, null=True, choices=GENDERS, blank=True)
     education = models.CharField(max_length=30, null=True, blank=True)
-    region = models.CharField(max_length=30, null=True, blank=True)
     experience = models.CharField(max_length=30, null=True, blank=True)
-   
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

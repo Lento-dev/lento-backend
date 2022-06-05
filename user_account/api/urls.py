@@ -13,7 +13,8 @@ urlpatterns = [
     path('reset_password/', reset_password, name='reset_password'),
     path('change_password/', change_password, name='change_password'),
     path('edit-profile/', views.UserProfileRetrieveUpdateView.as_view({'put': 'update'}), name='edit-profile'),
-    path('user-profile/', views.UserProfileRetrieveUpdateView.as_view({'get': 'retrieve'}), name='user-profile')
+    path('user-profile/', views.UserProfileRetrieveUpdateView.as_view({'get': 'retrieve'}), name='user-profile'),
+    path('public-profile/<id>/', views.PublicUserProfileView.as_view({'get': 'retrieve'}), name='public-profile'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

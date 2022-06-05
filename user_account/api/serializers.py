@@ -6,9 +6,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = (
-            'username', 'email', 'image', 'cover', 'first_name', 'last_name', 'bio', 'phone', 'date_birth', 'province',
-            'city', 'country', 'job', 'gender', 'education', 'date_joined', 'experience', 'region'
+            'username', 'email', 'image', 'cover', 'first_name', 'last_name', 'bio', 'phone', 'date_birth', 'city',
+            'country', 'job', 'gender', 'education', 'date_joined', 'experience',
         )
         extra_kwargs = {
-            'username': {'read_only': True}, 'email': {'read_only': True},
+            'username': {'read_only': True}, 'email': {'required': False},
         }
+
+
+class PublicProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = (
+            'id', 'username', 'email', 'image', 'cover', 'first_name', 'last_name', 'bio', 'phone', 'date_birth',
+            'city', 'country', 'job', 'gender', 'education', 'experience'
+        )
