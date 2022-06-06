@@ -17,6 +17,7 @@ urlpatterns = [
     path('access-phone/' , views.Access_phone_number , name = 'access_phone'),
     path('access-profile/' , views.Access_profile , name = 'access_profile'),
 
+    path('public-profile/<id>/', views.PublicUserProfileView.as_view({'get': 'retrieve'}), name='public-profile'),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
