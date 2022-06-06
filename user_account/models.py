@@ -28,7 +28,7 @@ class Account(AbstractUser):
     email = models.EmailField(max_length=255, unique=True)
     image = models.ImageField(upload_to=upload_location, blank=True, null=True, default='a2.jpg')
     cover = models.ImageField(upload_to=upload_cover, blank=True, null=True)
-    bio = models.CharField(max_length=100, null=True, blank=True)
+    bio = models.CharField(max_length= 800, null=True, blank=True)
     phone = PhoneNumberField(null=True, blank=True)
     date_birth = models.DateField(max_length=8, null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
@@ -36,7 +36,10 @@ class Account(AbstractUser):
     job = models.CharField(max_length=30, null=True, blank=True)
     gender = models.CharField(max_length=7, null=True, choices=GENDERS, blank=True)
     education = models.CharField(max_length=30, null=True, blank=True)
-    experience = models.CharField(max_length=30, null=True, blank=True)
+    experience = models.CharField(max_length=800, null=True, blank=True)
+    access_phone = models.BooleanField(default=False)
+    access_profile = models.BooleanField(default = False)
+    
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
