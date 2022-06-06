@@ -109,6 +109,7 @@ class ChatConsumer(WebsocketConsumer):
     def new_message(self, data):
         author = data['from']
         author_user = User.objects.filter(email=author)[0]
+
         message = Messagee.objects.create(
             author=author_user, 
             content=data['message'])
