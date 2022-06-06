@@ -10,6 +10,11 @@ def upload_location(instance, filename, **kwargs):
     )
     return file_path
 
+
+def get_ad_expire_date():
+    return datetime.now() + timedelta(days=7)
+
+
 class BaseAdvertisement(PolymorphicModel):
     Title = models.CharField(max_length=100, blank=True, null=True)
     Description = models.CharField(max_length=1000, blank=True, null=True)
@@ -18,9 +23,8 @@ class BaseAdvertisement(PolymorphicModel):
     City = models.CharField(max_length=100, blank=True, null=True)
     Address = models.CharField(max_length=500, blank=True, null=True)
     date_joined	= models.DateTimeField(verbose_name='date joined', auto_now_add=True)
-
     owner = models.ForeignKey('user_account.Account', related_name='advertisement_owner', on_delete=models.CASCADE)
-    ad_expire_date = models.DateTimeField(default=datetime.now() + timedelta(days=7), null=True, blank=True)
+    ad_expire_date = models.DateTimeField(default=get_ad_expire_date, null=True, blank=True)
 
 
 class ClothAdvertisement(BaseAdvertisement):
