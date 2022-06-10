@@ -13,7 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'django-insecure-&3*t78^qjv+_&0)r1oy016jie+qnq_fkdkvku-y$g=iw*btbe#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False #if DEPLOY else True
+DEBUG = False if DEPLOY else True
 
 ALLOWED_HOSTS = ['*']
 
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'oauth2_provider',
     'social_django',
     'drf_social_oauth2',
-    'advertisement', 
+    'advertisement',
     'polymorphic',
     'django_filters'
 ]
@@ -185,20 +185,21 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'filters': None,
-            'class': 'logging.StreamHandler',
+if not DEBUG:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'filters': None,
+                'class': 'logging.StreamHandler',
+            },
         },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
+        'loggers': {
+            'django': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
         },
-    },
-}
+    }
