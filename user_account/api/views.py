@@ -68,7 +68,8 @@ class PublicUserProfileView(viewsets.ModelViewSet):
     lookup_field = 'id'
 
     def get_serializer_class(self):
-        if self.request.user.account.access_phone:
+        user = Account.objects.get(id = self.kwargs[self.lookup_field]) 
+        if user.access_phone:
             return PublicProfileSerializer
         else: 
             return PublicProfileSerializerwithoutphonenumber
