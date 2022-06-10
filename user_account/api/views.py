@@ -1,10 +1,13 @@
+from typing_extensions import Required
 from urllib import response
 from rest_framework import generics, status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
-from user_account.api.serializers import UserProfileSerializer
+from user_account.api.serializers import UserProfileSerializer 
 from django.shortcuts import render, get_object_or_404
+from user_account.permissions import Authorauthenticatedorhasaccess 
+
 
 from user_account.api.serializers import UserProfileSerializer, PublicProfileSerializer , PublicProfileSerializerwithoutphonenumber
 from user_account.models import Account
@@ -58,23 +61,17 @@ def Access_profile(request):
        
 
 
-    
-
-
-
-
-
-
-
-
-	
 	
 class PublicUserProfileView(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated ,Authorauthenticatedorhasaccess ]
     queryset = Account.objects.all()
     lookup_field = 'id'
 
     def get_serializer_class(self):
-        return PublicProfileSerializer
+        if self.request.user.account.access_phone:
+            return PublicProfileSerializer
+        else: 
+            return PublicProfileSerializerwithoutphonenumber
+        
 
 
