@@ -21,3 +21,13 @@ class PublicProfileSerializer(serializers.ModelSerializer):
             'id', 'username', 'email', 'image', 'cover', 'first_name', 'last_name', 'bio', 'phone', 'date_birth',
             'city', 'country', 'job', 'gender', 'education', 'experience'
         )
+
+
+class PublicProfileSerializerwithoutphonenumber(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = (
+            'id', 'username', 'email', 'image', 'cover', 'first_name', 'last_name', 'bio', 'date_birth',
+            'city', 'country', 'job', 'gender', 'education', 'experience'
+        )
+

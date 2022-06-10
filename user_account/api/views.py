@@ -2,7 +2,7 @@ from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from user_account.api.serializers import UserProfileSerializer, PublicProfileSerializer
+from user_account.api.serializers import UserProfileSerializer, PublicProfileSerializer , PublicProfileSerializerwithoutphonenumber
 from user_account.models import Account
 
 
@@ -22,3 +22,5 @@ class PublicUserProfileView(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         return PublicProfileSerializer
+
+
