@@ -38,7 +38,7 @@ class Account(AbstractUser):
     education = models.CharField(max_length=30, null=True, blank=True)
     experience = models.CharField(max_length=800, null=True, blank=True)
     access_phone = models.BooleanField(default=False)
-    access_profile = models.BooleanField(default = False)
+    access_profile = models.BooleanField(default = True)
     
 
     USERNAME_FIELD = 'email'
