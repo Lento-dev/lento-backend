@@ -56,7 +56,7 @@ class Base64ImageField(serializers.ImageField):
 
 class BaseAdvertisementSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.email')
-    image =   image = Base64ImageField(
+    Image = Base64ImageField(
         max_length=None, use_url=True, required = False
     )
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True )
