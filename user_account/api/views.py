@@ -32,13 +32,14 @@ def Access_phone_number(request):
     print('status',Access)
     if(Access == 'true'): 
         account.access_phone = True  
+        print('here')
         response['status'] = 'access to phone number is true'
     else: 
         account.access_phone = False
         response['status'] = 'access to phone number is false'
     account.save()
 
-    return Response(response ,  status=status.HTTP_201_CREATED)
+    return Response(response ,  status=status.HTTP_200_OK)
 
 
 @api_view(['POST', ])
@@ -47,19 +48,18 @@ def Access_profile(request):
     account = get_object_or_404(Account ,id = request.user.id)
     Access = request.POST.get('Profile_Access')
     response = {}
-    if(Access == 'true'): 
+    if(Access == 'true'):
         account.access_profile = True  
         response['status'] = 'access to profile is true'
     else: 
         account.access_profile = False
         response['status'] = 'access to profile is false'
     account.save()
-
-    return Response(response ,  status=status.HTTP_201_CREATED)
+    print(account.access_profile)
+    return Response(response ,  status=status.HTTP_200_OK)
 
 
        
-
 
 	
 class PublicUserProfileView(viewsets.ModelViewSet):

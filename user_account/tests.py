@@ -1,3 +1,4 @@
+from tkinter.tix import Tree
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
@@ -53,3 +54,86 @@ class UserAccountViewsTest(TestCase):
         response = view(request, id=test_user.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['username'], 'test_user2')
+
+    def test_access_profile_api(self):
+        view = views.Access_profile
+        request = self.factory.post('/api/account/access-profile/',
+                                    data={'Profile_Access': 'true'})
+        
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'] ,'access to profile is true' )
+
+
+    def test_access_profile_api_2(self):
+
+        view = views.Access_profile
+        request = self.factory.post('/api/account/access-profile/',
+                                    data={'Profile_Access': 'false'})
+        
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'], 'access to profile is false')
+
+
+
+    def test_access_phone_api(self):
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "123456")
+        view = views.Access_phone_number
+        request = self.factory.post('/api/account/access-phone/',
+                                    data={'Phone_Access': 'true'})
+        
+        force_authenticate(request, user=test_user2)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'] , 'access to phone number is true')
+
+
+    def test_access_phone_api_2(self):
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "123456")
+        
+        view = views.Access_phone_number
+        request = self.factory.post('/api/account/access-phone/',
+                                    data={'Phone_Access': 'false'})
+        
+        force_authenticate(request, user=test_user2)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['status'] , 'access to phone number is false')
+
+
+    def test_public_profile_access(self):
+        test_user = Account.objects.create_user('test_user2', "test2@example.com", "123456")
+        test_user.access_profile = False
+        test_user.save() 
+        view = views.PublicUserProfileView.as_view({'get': 'retrieve'})
+        request = self.factory.get(f'/api/account/public-profile/{test_user.id}/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request, id=test_user.id)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_public_profile_access_true(self):
+        test_user = Account.objects.create_user('test_user2', "test2@example.com", "123456")
+        test_user.access_profile = True
+        test_user.save() 
+        view = views.PublicUserProfileView.as_view({'get': 'retrieve'})
+        request = self.factory.get(f'/api/account/public-profile/{test_user.id}/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request, id=test_user.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+
+     
+
+    
+        
+
+
+
+
+    
+
+
+    

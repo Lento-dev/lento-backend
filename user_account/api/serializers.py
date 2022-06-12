@@ -61,27 +61,14 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
         fields = (
             'username', 'email', 'image', 'cover', 'first_name', 'last_name', 'bio', 'phone', 'date_birth', 'city',
-            'country', 'job', 'gender', 'education', 'date_joined', 'experience'
+            'country', 'job', 'gender', 'education', 'date_joined', 'experience' , 'access_phone' , 'access_profile'
         )
         extra_kwargs = {
             'username': {'read_only': True}, 'email': {'required': False},
         }
 
 
-class UserProfileSerializerWithoutphone(serializers.ModelSerializer):
-    image =    Base64ImageField(
-    max_length=None, use_url=True, required = False)
-    cover = Base64ImageField(
-    max_length=None, use_url=True, required = False)
-    class Meta:
-        model = Account
-        fields = (
-            'username', 'email', 'image', 'cover', 'first_name', 'last_name', 'bio', 'date_birth', 'city', 'country',
-            'job', 'gender', 'education', 'date_joined', 'experience'
-        )
-        extra_kwargs = {
-            'username': {'read_only': True}, 'email': {'required': False},
-        }
+
 
 
 class PublicProfileSerializer(serializers.ModelSerializer):
