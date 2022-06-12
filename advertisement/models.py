@@ -26,6 +26,7 @@ class BaseAdvertisement(PolymorphicModel):
     date_joined	= models.DateTimeField(verbose_name='date joined', auto_now_add=True)
     owner = models.ForeignKey('user_account.Account', related_name='advertisement_owner', on_delete=models.CASCADE)
     ad_expire_date = models.DateTimeField(default=get_ad_expire_date, null=True, blank=True)
+    mostaarname = models.CharField(max_length=100, blank=True, null=True)
 
 
 class ClothAdvertisement(BaseAdvertisement):
