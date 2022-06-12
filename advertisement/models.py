@@ -1,4 +1,5 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+from django.utils import timezone
 from django.db import models
 from polymorphic.models import PolymorphicModel
 
@@ -12,7 +13,7 @@ def upload_location(instance, filename, **kwargs):
 
 
 def get_ad_expire_date():
-    return datetime.now() + timedelta(days=7)
+    return timezone.now() + timedelta(days=7)
 
 
 class BaseAdvertisement(PolymorphicModel):
