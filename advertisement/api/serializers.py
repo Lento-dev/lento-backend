@@ -62,7 +62,7 @@ class BaseAdvertisementSerializer(serializers.ModelSerializer):
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True )
     class Meta:
         model = BaseAdvertisement
-        fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner' , 'comments' , 'date_joined')
+        fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner' , 'comments' , 'date_joined' , 'mostaarname ')
 
 
 class UpdateAdvertisementSerializer(serializers.ModelSerializer):
