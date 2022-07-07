@@ -55,14 +55,14 @@ class Base64ImageField(serializers.ImageField):
 
 
 class BaseAdvertisementSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.email')
+    owner = serializers.ReadOnlyField(source='owner.username')
     Image = Base64ImageField(
         max_length=None, use_url=True, required = False
     )
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True )
     class Meta:
         model = BaseAdvertisement
-        fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner' , 'comments' , 'date_joined' , 'mostaarname')
+        fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner' , 'date_joined' , 'mostaarname')
 
 
 class UpdateAdvertisementSerializer(serializers.ModelSerializer):
