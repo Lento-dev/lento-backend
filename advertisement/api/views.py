@@ -7,7 +7,7 @@ from .serializers import BaseAdvertisementSerializer, ServiceAdvertisementSerial
     CommentSerializer, SavedSerializer, UpdateBaseAdvertisementPolymorphicSerializer
 from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAdvertisement, AnimalAdvertisement,  \
     ClothAdvertisement  ,Comment , Saved
-from advertisement.permissions import IsOwner
+from advertisement.permissions import IsOwner , IsOwnerOrReadOnly
 from django.shortcuts import render, get_object_or_404, redirect
 from advertisement.filtersets import AdvertisementFilterSet
 
@@ -71,14 +71,22 @@ class clothcreate(generics.CreateAPIView, viewsets.ModelViewSet):
 
 
 class AdvertisementViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated,IsOwner]
     serializer_class = UpdateBaseAdvertisementPolymorphicSerializer
     queryset = BaseAdvertisement.objects.all()
     lookup_field = 'id'
 
 
+
+
+class AdvertisementViewSetretrieve(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated,IsOwnerOrReadOnly]
+    serializer_class = BaseAdvertisementPolymorphicSerializer
+    queryset = BaseAdvertisement.objects.all()
+    lookup_field = 'id'
+
 class AdvertisementViewSetreturn(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
     serializer_class = BaseAdvertisementPolymorphicSerializer
     queryset = BaseAdvertisement.objects.all()
     lookup_field = 'id'
@@ -96,7 +104,7 @@ class SearchAdvertisementView(generics.ListAPIView):
 
 
 class LoadViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated,IsOwnerOrReadOnly]
     serializer_class = BaseAdvertisementPolymorphicSerializer
     lookup_field = 'id'
     def get_queryset(self): 
@@ -106,7 +114,7 @@ class LoadViewSet(viewsets.ModelViewSet):
 
 class CommentList(generics.ListCreateAPIView):
     queryset = Comment.objects.all()
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated,IsOwnerOrReadOnly]
     serializer_class = CommentSerializer
     #get_replies() function 
    
@@ -118,7 +126,7 @@ class CommentList(generics.ListCreateAPIView):
 class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
 
 class savedview( viewsets.ModelViewSet):
