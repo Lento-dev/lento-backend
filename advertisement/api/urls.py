@@ -21,6 +21,7 @@ urlpatterns = [
     path('savelist/', views.savedview.as_view({'get': 'list'} , ), name = "save-list"), 
     path('saveretrieve/', views.savedview.as_view({'get': 'retrieve'} , ), name = "save-retrieve"),
     path('homepageads/' , views.AdvertisementViewSetreturn.as_view({'get': 'list'}) , name = 'list-all' ),
+    path('userview/<int:pk>' , views.UserDetail.as_view() , name = 'user-detail' ),
     
 ]
 
