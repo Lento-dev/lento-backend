@@ -21,6 +21,7 @@ class BaseAdvertisement(PolymorphicModel):
     Description = models.CharField(max_length=1000, blank=True, null=True)
     Image = models.ImageField(upload_location, blank=True, null=True)
     province = models.CharField(max_length=100, blank=True, null=True)
+    Country = models.CharField(max_length=100, blank=True, null=True)
     City = models.CharField(max_length=100, blank=True, null=True)
     Address = models.CharField(max_length=500, blank=True, null=True)
     date_joined	= models.DateTimeField(verbose_name='date joined', auto_now_add=True)

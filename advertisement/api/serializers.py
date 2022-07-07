@@ -1,8 +1,9 @@
+from cmath import acos
 from rest_framework import serializers
 from advertisement.models import BaseAdvertisement, FoodAdvertisement, ServiceAdvertisement, AnimalAdvertisement, \
     ClothAdvertisement ,  Comment,Saved
 from rest_polymorphic.serializers import PolymorphicSerializer
-
+from user_account.models import Account
 
 class Base64ImageField(serializers.ImageField):
     """
@@ -53,23 +54,27 @@ class Base64ImageField(serializers.ImageField):
 
         return extension
 
+class userserializer(serializers.ModelSerializer): 
+    class Meta: 
+        model = Account
+        fields = ('id' , 'username' , 'email')
 
 class BaseAdvertisementSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.username')
+    owner = userserializer(many = True , read_only=True)
     Image = Base64ImageField(
         max_length=None, use_url=True, required = False
     )
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True )
     class Meta:
         model = BaseAdvertisement
-        fields = ('id', 'Title', 'Description', 'Image', 'province', 'City', 'Address', 'owner' , 'date_joined' , 'mostaarname')
+        fields = ('id', 'Title', 'Description', 'Image', 'province', 'Country' , 'City', 'Address', 'owner' , 'date_joined' , 'mostaarname')
 
 
 class UpdateAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = BaseAdvertisement
         fields = (
-            'id', 'Title', 'Description', 'Image', 'province', 'City', 'Address')
+            'id', 'Title', 'Description', 'Image', 'province', 'City', 'Address' , 'Country')
 
 
 class ServiceAdvertisementSerializer(serializers.ModelSerializer):
