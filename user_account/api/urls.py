@@ -16,7 +16,8 @@ urlpatterns = [
     path('user-profile/', views.UserProfileRetrieveUpdateView.as_view({'get': 'retrieve'}), name='user-profile'),
     path('access-phone/' , views.Access_phone_number , name = 'access_phone'),
     path('access-profile/' , views.Access_profile , name = 'access_profile'),
-
+    path('verify-newemail/' , views.verification , name = 'verify'),
+    path('changeEmail/' , views.changeEmail , name = 'change'),
     path('public-profile/<id>/', views.PublicUserProfileView.as_view({'get': 'retrieve'}), name='public-profile'),
 ]
 
