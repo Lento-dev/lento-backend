@@ -1,3 +1,4 @@
+import email
 from typing_extensions import Required
 from urllib import response
 from rest_framework import generics, status, viewsets, filters
@@ -7,11 +8,12 @@ from rest_framework.response import Response
 from user_account.api.serializers import UserProfileSerializer 
 from django.shortcuts import render, get_object_or_404
 from user_account.permissions import Authorauthenticatedorhasaccess 
-
-
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
+from user_account.utils import Util
 from user_account.api.serializers import UserProfileSerializer, PublicProfileSerializer , PublicProfileSerializerwithoutphonenumber
 from user_account.models import Account
-
+from django.core.exceptions import ValidationError
 
 class UserProfileRetrieveUpdateView(generics.RetrieveUpdateAPIView, viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
@@ -76,3 +78,37 @@ class PublicUserProfileView(viewsets.ModelViewSet):
         
 
 
+@api_view(['GET', ]) 
+@permission_classes([IsAuthenticated, ])
+def verification(request):
+    data = {}
+    try: 
+        data['resonse'] =  'success'
+        email=request.GET.get('email')
+        current_site = '' 
+        absurl='http://' + current_site + "?email=" + email  
+        email_body = 'use link below to verify your email\n' + 'domain:' + absurl
+        data = {'content':email_body ,'subject':'please verify you email' ,'to_email':[email]}	
+        print('*' * 50)
+        Util.send_email(data)	
+        
+        return Response(data)
+
+    except KeyError as e:
+        print(e)
+        raise ValidationError({"400": f'Field {str(e)} missing'})
+
+
+
+
+
+#activating user account
+@api_view(['GET', ]) 
+@permission_classes([IsAuthenticated, ])
+def changeEmail( request):
+	
+	NewEmail=request.GET.get('email')
+	user = request.user
+	user.email = NewEmail
+	user.save()
+	return Response('New Email is successfully confirmed') 

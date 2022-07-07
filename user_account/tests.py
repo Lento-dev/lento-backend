@@ -124,6 +124,28 @@ class UserAccountViewsTest(TestCase):
         response = view(request, id=test_user.id)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    def test_email_verifiation_sent(self): 
+        test_user = Account.objects.create_user('test_user2', "test2@example.com", "123456")
+        view = views.verification
+        request = self.factory.get('/api/account/verify-newemail/?email=test3@example.com')
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['to_email'][0], 'test3@example.com')
+        
+    def test_email_change(self): 
+        test_user = Account.objects.create_user('test_user2', "test2@example.com", "123456")
+        view = views.changeEmail
+        request = self.factory.get('/api/account/verify-newemail/?email=test3@example.com')
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+       
+        
+        
+        
+        
+        
 
      
 

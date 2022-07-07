@@ -20,14 +20,14 @@ ALLOWED_HOSTS = ['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_PASSWORD = 'Charityxx123@'
+EMAIL_HOST_PASSWORD = 'qeydweywsfyvgjys'
 EMAIL_HOST_USER = 'charityxx123@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 if DEPLOY:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 else:
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+      EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Application definition
 
