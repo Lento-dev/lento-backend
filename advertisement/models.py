@@ -20,6 +20,8 @@ class BaseAdvertisement(PolymorphicModel):
     Title = models.CharField(max_length=100, blank=True, null=True)
     Description = models.CharField(max_length=1000, blank=True, null=True)
     Image = models.ImageField(upload_location, blank=True, null=True)
+    Image1 = models.ImageField(upload_location, blank=True, null=True)
+    Image2 = models.ImageField(upload_location, blank=True, null=True)
     province = models.CharField(max_length=100, blank=True, null=True)
     Country = models.CharField(max_length=100, blank=True, null=True)
     City = models.CharField(max_length=100, blank=True, null=True)

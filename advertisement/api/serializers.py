@@ -60,21 +60,27 @@ class userserializer(serializers.ModelSerializer):
         fields = ('id' , 'username' , 'email')
 
 class BaseAdvertisementSerializer(serializers.ModelSerializer):
-    owner = userserializer(many = True , read_only=True)
+    owner = userserializer(many = True , read_only=True )
     Image = Base64ImageField(
+        max_length=None, use_url=True, required = False
+    )
+    Image1 = Base64ImageField(
+        max_length=None, use_url=True, required = False
+    )
+    Image2 = Base64ImageField(
         max_length=None, use_url=True, required = False
     )
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True )
     class Meta:
         model = BaseAdvertisement
-        fields = ('id', 'Title', 'Description', 'Image', 'province', 'Country' , 'City', 'Address', 'owner' , 'date_joined' , 'mostaarname')
+        fields = ('id', 'Title', 'Description', 'Image', 'Image1', 'Image2', 'province', 'Country' , 'City', 'Address', 'owner' , 'date_joined' , 'mostaarname')
 
 
 class UpdateAdvertisementSerializer(serializers.ModelSerializer):
     class Meta:
         model = BaseAdvertisement
         fields = (
-            'id', 'Title', 'Description', 'Image', 'province', 'City', 'Address' , 'Country')
+            'id', 'Title', 'Description', 'Image', 'Image1', 'Image2','province', 'City', 'Address' , 'Country')
 
 
 class ServiceAdvertisementSerializer(serializers.ModelSerializer):
