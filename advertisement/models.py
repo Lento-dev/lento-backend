@@ -85,3 +85,12 @@ class Saved(models.Model):
     
     def str(self):
         return self.post
+    
+class SavedModel(models.Model):
+
+    user_n = models.ForeignKey('user_account.Account', related_name='save_user', on_delete=models.CASCADE, blank=True)
+    post_n = models.ForeignKey('advertisement.BaseAdvertisement', related_name='save_post', on_delete=models.CASCADE, blank=True)
+   
+    def str(self):
+        return self.post
+

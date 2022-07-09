@@ -17,11 +17,12 @@ urlpatterns = [
     path('create/' , views.AdvertisementViewSetretrieve.as_view({'post' : 'create'}) , name ='create-advertisement' ),
     path('comments/' , views.CommentList.as_view(), name="comments"),
     path('comments/<int:pk>/', views.CommentDetail.as_view(), name = "comment-detail"),
-    path('save/', views.savedview.as_view({'post': 'create'}  ), name = "save-create"),
-    path('savelist/', views.savedview.as_view({'get': 'list'} , ), name = "save-list"), 
-    path('saveretrieve/', views.savedview.as_view({'get': 'retrieve'} , ), name = "save-retrieve"),
+    path('commentposts/', views.Commentofpost.as_view(), name = "comment-post"),
     path('homepageads/' , views.AdvertisementViewSetreturn.as_view({'get': 'list'}) , name = 'list-all' ),
     path('userview/<int:pk>' , views.UserDetail.as_view() , name = 'user-detail' ),
+    path('Saves/' , views.save_view2.as_view({'post': 'create'}), name="saves"),
+    path('Savelist/', views.save_view2.as_view({'get': 'list'} , ), name = "saves-list"),
+    path('Saves/<id>/', views.save_view2.as_view({'get': 'retrieve'} ), name = "saves-retrieve")
     
 ]
 
