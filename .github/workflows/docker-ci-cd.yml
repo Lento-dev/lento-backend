@@ -24,3 +24,14 @@ jobs:
       - name: Run tests
         run: |
           docker-compose exec -T lento-backend python3 manage.py test
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          script: ./back_deploy.sh

@@ -9,7 +9,7 @@ from django.conf import settings
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Lento API",
+        title="LENTO API",
         default_version='v1',
     ),
     public=True,
