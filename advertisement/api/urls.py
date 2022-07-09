@@ -13,14 +13,15 @@ urlpatterns = [
     path('delete/<id>/', views.AdvertisementViewSet.as_view({'delete': 'destroy'}), name='delete-advertisement'),
     path('search/', views.SearchAdvertisementView.as_view(), name='search-advertisement'),
     path('load-all/', views.LoadViewSet.as_view({'get': 'list'}), name = 'get-advertisement'),
-    path('retrieve/<id>' ,  views.AdvertisementViewSet.as_view({'get': 'retrieve'}) , name = 'retrieve'),
-    path('create/' , views.AdvertisementViewSet.as_view({'post' : 'create'}) , name ='create-advertisement' ),
+    path('retrieve/<id>' ,  views.AdvertisementViewSetretrieve.as_view({'get': 'retrieve'}) , name = 'retrieve'),
+    path('create/' , views.AdvertisementViewSetretrieve.as_view({'post' : 'create'}) , name ='create-advertisement' ),
     path('comments/' , views.CommentList.as_view(), name="comments"),
     path('comments/<int:pk>/', views.CommentDetail.as_view(), name = "comment-detail"),
     path('save/', views.savedview.as_view({'post': 'create'}  ), name = "save-create"),
     path('savelist/', views.savedview.as_view({'get': 'list'} , ), name = "save-list"), 
     path('saveretrieve/', views.savedview.as_view({'get': 'retrieve'} , ), name = "save-retrieve"),
     path('homepageads/' , views.AdvertisementViewSetreturn.as_view({'get': 'list'}) , name = 'list-all' ),
+    path('userview/<int:pk>' , views.UserDetail.as_view() , name = 'user-detail' ),
     
 ]
 
