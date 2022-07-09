@@ -1,7 +1,7 @@
 from cmath import acos
 from rest_framework import serializers
-from advertisement.models import BaseAdvertisement, FoodAdvertisement, ServiceAdvertisement, AnimalAdvertisement, \
-    ClothAdvertisement ,  Comment,Saved
+from advertisement.models import BaseAdvertisement, FoodAdvertisement, SavedModel, ServiceAdvertisement, AnimalAdvertisement, \
+    ClothAdvertisement ,  Comment,Saved , SavedModel
 from rest_polymorphic.serializers import PolymorphicSerializer
 from user_account.models import Account
 
@@ -73,7 +73,7 @@ class BaseAdvertisementSerializer(serializers.ModelSerializer):
     comments = serializers.PrimaryKeyRelatedField(many=True, read_only=True )
     class Meta:
         model = BaseAdvertisement
-        fields = ('id', 'Title', 'Description', 'Image', 'Image1', 'Image2', 'province', 'Country' , 'City', 'Address', 'owner' , 'date_joined' , 'mostaarname')
+        fields = ('id', 'Title', 'Description', 'Image', 'Image1', 'Image2', 'province', 'Country' , 'City', 'Address', 'owner' , 'date_joined' , 'mostaarname' , 'comments' )
 
 
 class UpdateAdvertisementSerializer(serializers.ModelSerializer):
@@ -173,5 +173,12 @@ class SavedSerializer(serializers.ModelSerializer):
         model = Saved
         fields = "__all__"
 
-  
+
+class SavedmodelSerializer(serializers.ModelSerializer):
+
+
+    class Meta:
+        model = SavedModel
+        fields = "__all__"
+
 
