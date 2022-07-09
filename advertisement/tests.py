@@ -1,9 +1,10 @@
+from django import test
 from django.test import TestCase
 from rest_framework.test import APIRequestFactory, force_authenticate
 from rest_framework import status
 
 from .filtersets import AdvertisementFilterSet
-from .models import BaseAdvertisement, ClothAdvertisement, ServiceAdvertisement, AnimalAdvertisement, FoodAdvertisement
+from .models import BaseAdvertisement, ClothAdvertisement, ServiceAdvertisement, AnimalAdvertisement, FoodAdvertisement , SavedModel , Comment
 from .api import views
 from user_account.models import Account
 from django.utils.timezone import datetime
@@ -191,9 +192,7 @@ class AdvertisementsTest(TestCase):
         datetime1 = datetime(2015, 10, 11, 23, 55, 59, 342380)
         datetime2 = datetime(2013, 10, 10, 23, 55, 59, 342379)
         datetime3 = datetime(2020, 10, 12, 23, 55, 59, 342394)
-        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1' , date_joined = datetime1)
-        test_ad2 = ServiceAdvertisement.objects.create(Title='test-title2', owner=self.test_user, service_type='medical2' , date_joined = datetime2)
-        test_ad3 = AnimalAdvertisement.objects.create(Title='test-titlea3', owner=self.test_user, animal_breed='cat' , date_joined = datetime3)
+      
         view = views.AdvertisementViewSetreturn.as_view({'get': 'list'})
         request = self.factory.get('/advertisement/homepageads/')
         force_authenticate(request, user=self.test_user)
@@ -207,6 +206,266 @@ class AdvertisementsTest(TestCase):
                if ad['date_joined'] < response.data[j]['date_joined']:
                     return AssertionError.__context__
                i += 1
+               
+    def test_save_advertisement(self): 
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1' )
+        view = views.save_view2.as_view({'post': 'create'})
+        request = self.factory.post('api/advertisement/Saves/' , data={'user_n': self.test_user.id, 'post_n': test_ad1.id})
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['save'], 'save')
+        
+    def test_unsave_advertisement(self): 
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1' )
+        view = views.save_view2.as_view({'post': 'create'})
+        savex = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad1)
+        request = self.factory.post('api/advertisement/Saves/' , data={'user_n': self.test_user.id, 'post_n': test_ad1.id})
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['save'], 'unsave')
+        
+    def test_saveList_advertisement(self): 
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        test_ad2 = ServiceAdvertisement.objects.create(Title='test-title2', owner=self.test_user, service_type='medical2' )
+        test_ad3 = AnimalAdvertisement.objects.create(Title='test-titlea3', owner=self.test_user, animal_breed='cat' )
+        save1 = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad1)
+        save2 = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad2)
+        save3 = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad3)
+        save4 = SavedModel.objects.create(user_n = test_user2, post_n =  test_ad3)
+      
+        view = views.save_view2.as_view({'get': 'list'})
+        request = self.factory.get('api/advertisement/Savelist/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        for save in response.data: 
+            if save['user_n'] != self.test_user: 
+                return AssertionError.__context__
+            
+    def test_saveList_advertisement_otheruser(self): 
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        test_ad2 = ServiceAdvertisement.objects.create(Title='test-title2', owner=self.test_user, service_type='medical2' )
+        test_ad3 = AnimalAdvertisement.objects.create(Title='test-titlea3', owner=self.test_user, animal_breed='cat' )
+        save1 = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad1)
+        save2 = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad2)
+        save3 = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad3)
+      
+        view = views.save_view2.as_view({'get': 'list'})
+        request = self.factory.get('api/advertisement/Savelist/')
+        force_authenticate(request, user=test_user2)
+        response = view(request)
+        self.assertEqual(len(response.data), 0)
+        
+            
+    def test_save_retrieve_advertisement(self): 
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        save1 = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad1)
+        view = views.save_view2.as_view({'get': 'retrieve'})
+        request = self.factory.get(f'api/advertisement/Saves/<{save1.id}>/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request , id = save1.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['post_n'],  test_ad1.id)
+        self.assertEqual(response.data['user_n'],  self.test_user.id)
+        
+    def test_save_retrieve_advertisement_forbidden(self): 
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        save1 = SavedModel.objects.create(user_n = self.test_user, post_n =  test_ad1)
+        view = views.save_view2.as_view({'get': 'retrieve'})
+        request = self.factory.get(f'api/advertisement/Saves/<{save1.id}>/')
+        force_authenticate(request, user=test_user2)
+        response = view(request , id = save1.id)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        
+        
+        
+        
+    def test_comment_create(self): 
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        view = views.CommentList.as_view()
+        request = self.factory.post('api/advertisement/comment/' , data={'body': 'mycomment', 'post': test_ad1.id})
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['body'], 'mycomment')
+        self.assertEqual(response.data['post'], test_ad1.id)
+        
+    def test_comment_lists(self): 
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        test_ad2 = ServiceAdvertisement.objects.create(Title='test-title2', owner=self.test_user, service_type='medical2' )
+        test_ad3 = AnimalAdvertisement.objects.create(Title='test-titlea3', owner=self.test_user, animal_breed='cat' )
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        cm2 = Comment.objects.create(body = 'comment2' , post = test_ad2 , owner = self.test_user)
+        cm3 = Comment.objects.create(body = 'comment3' , post = test_ad3 , owner = self.test_user)
+        cm4 = Comment.objects.create(body = 'comment4' , post = test_ad3, owner = test_user2)
+        dict = {cm1.id , cm2.id  , cm3.id , cm4.id}
+        
+        view = views.CommentList.as_view()
+        request = self.factory.get('api/advertisement/comment/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        for cm in response.data: 
+            if cm['id'] not in dict: 
+                return AssertionError.__context__
+                
+    def test_comment_lists_of_post(self): 
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        test_ad2 = ServiceAdvertisement.objects.create(Title='test-title2', owner=self.test_user, service_type='medical2' )
+        test_ad3 = AnimalAdvertisement.objects.create(Title='test-titlea3', owner=self.test_user, animal_breed='cat' )
+        
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        cm2 = Comment.objects.create(body = 'comment2' , post = test_ad2 , owner = self.test_user)
+        cm3 = Comment.objects.create(body = 'comment3' , post = test_ad3 , owner = self.test_user)
+        cm4 = Comment.objects.create(body = 'comment4' , post = test_ad3, owner = test_user2)
+        dict = {cm1.id , cm2.id  , cm3.id , cm4.id}
+        
+        view = views.Commentofpost.as_view()
+        request = self.factory.get('api/advertisement/commenposts/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        for cm in response.data: 
+            self.assertEqual(cm['owner'] , 'test_user')
+            if cm['id'] not in dict: 
+                return AssertionError.__context__
+            
+    def test_comment_retrieve(self): 
+       
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        view = views.CommentDetail.as_view()
+        request = self.factory.get(f'api/advertisement/comments/{cm1.id}/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request ,  pk = cm1.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], cm1.id)
+        self.assertEqual(response.data['post'], test_ad1.id)
+        self.assertEqual(response.data['owner']  , 'test_user')
+        self.assertEqual(response.data['body']  , 'comment1')
+        
+    def test_comment_update_bad_Request(self): 
+       
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        view = views.CommentDetail.as_view()
+        request = self.factory.put(f'api/advertisement/comments/{cm1.id}/' , data={'body': 'newcomment' , 'post' : test_ad1.id})
+        force_authenticate(request, user=self.test_user)
+        response = view(request ,  pk = cm1.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], cm1.id)
+        self.assertEqual(response.data['post'], test_ad1.id)
+        self.assertEqual(response.data['owner']  , 'test_user')
+        self.assertEqual(response.data['body']  , 'newcomment')
+        
+        
+    def test_comment_update(self): 
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        view = views.CommentDetail.as_view()
+        request = self.factory.put(f'api/advertisement/comments/{cm1.id}/' , data={'body': 'newcomment' })
+        force_authenticate(request, user=self.test_user)
+        response = view(request ,  pk = cm1.id)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        
+        
+        
+    def test_comment_update_forbidden(self): 
+       
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        view = views.CommentDetail.as_view()
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        request = self.factory.put(f'api/advertisement/comments/{cm1.id}/' , data={'body': 'newcomment'})
+        force_authenticate(request, user=test_user2)
+        response = view(request ,  pk = cm1.id)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+        
+    def test_comment_delete(self): 
+       
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        view = views.CommentDetail.as_view()
+      
+        request = self.factory.delete(f'api/advertisement/comments/{cm1.id}/')
+        force_authenticate(request, user=self.test_user)
+        response = view(request ,  pk = cm1.id)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        
+    def test_comment_delete_forbidden(self): 
+       
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        view = views.CommentDetail.as_view()
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        request = self.factory.delete(f'api/advertisement/comments/{cm1.id}/')
+        force_authenticate(request, user=test_user2)
+        response = view(request ,  pk = cm1.id)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+    def test_comment_update_forbidden(self): 
+       
+        test_ad1 = ServiceAdvertisement.objects.create(Title='test-title1', owner=self.test_user, service_type='medical1')
+        cm1 = Comment.objects.create(body = 'comment1' , post = test_ad1 , owner = self.test_user)
+        view = views.CommentDetail.as_view()
+        test_user2 = Account.objects.create_user('test_user2', "test2@example.com", "234567")
+        request = self.factory.put(f'api/advertisement/comments/{cm1.id}/' , data={'body': 'newcomment'})
+        force_authenticate(request, user=test_user2)
+        response = view(request ,  pk = cm1.id)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+    
+    def test_get_user_data(self): 
+       
+        view = views.CommentDetail.as_view()
+       
+        request = self.factory.get(f'api/advertisement/userview/{self.test_user.id}/')
+        view = views.UserDetail.as_view()
+        force_authenticate(request, user= self.test_user)
+        response = view(request ,  pk = self.test_user.id)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['username'] , self.test_user.username)
+        self.assertEqual(response.data['email'] , self.test_user.email)
+        
+        
+        
+        
+    
+       
+        
+       
+        
+            
+            
+            
+        
+        
+        
+        
+       
+            
+            
+    
+                
+        
+       
+        
+    
+        
+   
+        
+    
 
     
       
