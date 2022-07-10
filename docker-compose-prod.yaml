@@ -12,6 +12,7 @@ services:
       DB_HOST: "db"
       DJANGO_DEPLOYMENT: 1 # set this to 0 for development
       FRONTEND_HOST: "http://62.3.41.86"
+      SENTRY_SDN: "http://e681d316d879441298f52e9079b34c97@62.3.41.86:9000/2"
     depends_on:
       - db
     volumes:

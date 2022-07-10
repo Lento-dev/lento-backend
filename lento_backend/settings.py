@@ -1,5 +1,7 @@
 from pathlib import Path
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 DEPLOY = int(os.environ.get('DJANGO_DEPLOYMENT', default=0))
 
@@ -18,6 +20,11 @@ DEBUG = False if DEPLOY else True
 ALLOWED_HOSTS = ['*']
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+sentry_sdk.init(
+    dsn=os.environ.get('SENTRY_SDN', default=''),
+    integrations=[DjangoIntegration()]
+)
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_PASSWORD = 'qeydweywsfyvgjys'
