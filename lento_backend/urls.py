@@ -16,6 +16,11 @@ schema_view = get_schema_view(
     permission_classes=(permissions.AllowAny,),
 )
 
+
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 urlpatterns = [
     re_path(r'^api/swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     re_path(r'^api/swagger/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
@@ -24,6 +29,7 @@ urlpatterns = [
     path('api/account/', include('user_account.api.urls')),
     path('api/social-auth/', include('drf_social_oauth2.urls',namespace='drf')),
     path('api/advertisement/', include('advertisement.api.urls')),
+    path('api/sentry-debug/', trigger_error),
     
 ]
 if bool(settings.DEBUG):
