@@ -1,6 +1,4 @@
-from turtle import pos
-from urllib import response
-from requests import post
+
 from rest_framework import generics, status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
