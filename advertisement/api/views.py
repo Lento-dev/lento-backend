@@ -1,5 +1,5 @@
-
-
+from urllib import response
+from requests import request
 from rest_framework import generics, status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -199,9 +199,32 @@ class save_view3( viewsets.ModelViewSet):
 
     def get_queryset(self): 
        return SavedModel.objects.filter(user_n = self.request.user.id ); 
+   
+
+#activating user account
+@api_view(['GET', ]) 
+@permission_classes([IsAuthenticated,  SaveIsOwner])
+def Save_condition( request):
+
+    postid=request.GET.get('post')
+    
+    user =request.user.id
+    response = {}
+   
+    get_object_or_404(BaseAdvertisement ,  id = postid)
+    
+    try:
+        saveobj  = SavedModel.objects.get(post_n = postid , user_n = user)
+        response['save_condition'] = 'is_save'
+    except: 
+         response['save_condition'] = 'is_unsave'
+        
+    return Response(response) 
+
     
         
-        
+
+       
     
    
    

@@ -23,6 +23,7 @@ urlpatterns = [
     path('Saves/' , views.save_view2.as_view({'post': 'create'}), name="saves"),
     path('Saves/<id>/', views.save_view2.as_view({'get': 'retrieve'} ), name = "saves-retrieve"),
     path('Savelist/', views.save_view3.as_view({'get': 'list'}) , name = "saves-list2"),
+    path('Save_condition/', views.Save_condition , name = "saves-condition"),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
