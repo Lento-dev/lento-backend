@@ -57,10 +57,10 @@ class Base64ImageField(serializers.ImageField):
 class userserializer(serializers.ModelSerializer): 
     class Meta: 
         model = Account
-        fields = ('id' , 'username' , 'email')
+        fields = ('id' , 'username' , 'email', 'first_name', 'last_name')
 
 class BaseAdvertisementSerializer(serializers.ModelSerializer):
-    owner = userserializer(many = True , read_only=True )
+    owner = userserializer(read_only=True)
     Image = Base64ImageField(
         max_length=None, use_url=True, required = False
     )
@@ -173,13 +173,10 @@ class SavedmodelSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedModel
         fields = "__all__"
-        
+
+
 class SaveAdvertisementDatas(serializers.ModelSerializer):
-    post_n = BaseAdvertisementPolymorphicSerializer(read_only=True) 
+    post_n = BaseAdvertisementSerializer(read_only=True)
     class Meta:
         model = SavedModel
         fields = "__all__"
-        
-        
-        
-        
