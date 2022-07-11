@@ -1,15 +1,18 @@
 
+from lib2to3.pytree import Base
+from urllib import response
+from jsonschema import ValidationError
 from rest_framework import generics, status, viewsets, filters
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django_filters import rest_framework as django_filters
-
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from user_account.models import Account
 from .serializers import BaseAdvertisementSerializer, ServiceAdvertisementSerializer, FoodAdvertisementSerializer, \
     AnimalAdvertisementSerializer, ClothesAdvertisementSerializer, BaseAdvertisementPolymorphicSerializer, \
-    CommentSerializer, SavedSerializer, UpdateBaseAdvertisementPolymorphicSerializer , userserializer , SavedmodelSerializer
+    CommentSerializer, UpdateBaseAdvertisementPolymorphicSerializer , userserializer , SavedmodelSerializer , SaveAdvertisementDatas
 from advertisement.models import BaseAdvertisement, ServiceAdvertisement, FoodAdvertisement, AnimalAdvertisement,  \
-    ClothAdvertisement  ,Comment , Saved , SavedModel
+    ClothAdvertisement  ,Comment ,  SavedModel
 from advertisement.permissions import IsOwner , IsOwnerOrReadOnly , SaveIsOwner ,  ReadOnlyuser
 from django.shortcuts import render, get_object_or_404, redirect
 from advertisement.filtersets import AdvertisementFilterSet
@@ -145,149 +148,7 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
 
 
-class savedview( viewsets.ModelViewSet):
-    queryset = Saved.objects.all()
-    serializer_class = SavedSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
-    response = {}
 
-    def create(self, request, *args, **kwargs):
-        serializer_data = request.data.copy()
-        serializer_data.update({'user':request.user.id})
-        postid = serializer_data['post']
-        response = {}
-        x = None
-        try:
-            keyword = '' 
-            x = Saved.objects.get(user = request.user.id , post = postid)
-            response['post'] = postid
-            
-            if(x.saved == True): 
-                x.saved = False 
-                keyword = 'False'
-            else: 
-                x.saved = True
-                keyword = 'True'
-
-            x.save()
-            response['savepost'] = 'Save post is ' + keyword
-            
-        except: 
-            print('data is not created yet or is not correct')
-
-        if (x == None): 
-            serializer_data.update({'saved':True})
-            serializer = self.get_serializer(data=serializer_data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            response = serializer_data
-            response.update({'savedpost':'Save post is True'})
-            
-        return Response(response, status=status.HTTP_201_CREATED)
-
-
-    def get_queryset(self): 
-        
-        queryset = Saved.objects.filter(user = self.request.user.id  , saved = True); 
-        return queryset; 
-
-    def get_object(self): 
-        postid = self.request.GET.get('post')
-        return Saved.objects.get(user = self.request.user.id , post = postid)
-
-    def retrieve(self, request): 
-        data = {}
-        postid = self.request.GET.get('post')
-        
-        s = status.HTTP_200_OK
-       
-        try: 
-            obj = self.get_object(); 
-            savedx = obj.saved
-            data['save'] = savedx
-             
-        except: 
-            data['save'] = False
-
-        if(postid.isnumeric()):
-             get_object_or_404(BaseAdvertisement ,  id = postid)
-        else: 
-            data = {'status':'bad data format'}
-            s = status.HTTP_400_BAD_REQUEST
-        return  Response(data, s)
-    
-class save_view( viewsets.ModelViewSet):
-    queryset = Saved.objects.all()
-    serializer_class = SavedSerializer
-    permission_classes = [IsAuthenticated, IsOwner]
-    response = {}
-
-    def create(self, request, *args, **kwargs):
-        serializer_data = request.data.copy()
-        serializer_data.update({'user':request.user.id})
-        postid = serializer_data['post']
-        response = {}
-        x = None
-        try:
-            keyword = '' 
-            x = Saved.objects.get(user = request.user.id , post = postid)
-            response['post'] = postid
-            
-            if(x.saved == True): 
-                x.saved = False 
-                keyword = 'False'
-            else: 
-                x.saved = True
-                keyword = 'True'
-
-            x.save()
-            response['savepost'] = 'Save post is ' + keyword
-            
-        except: 
-            print('data is not created yet or is not correct')
-
-        if (x == None): 
-            serializer_data.update({'saved':True})
-            serializer = self.get_serializer(data=serializer_data)
-            serializer.is_valid(raise_exception=True)
-            self.perform_create(serializer)
-            response = serializer_data
-            response.update({'savedpost':'Save post is True'})
-            
-        return Response(response, status=status.HTTP_201_CREATED)
-
-
-    def get_queryset(self): 
-        
-        queryset = Saved.objects.filter(user = self.request.user.id  , saved = True); 
-        return queryset; 
-
-    def get_object(self): 
-        postid = self.request.GET.get('post')
-        return Saved.objects.get(user = self.request.user.id , post = postid)
-
-    def retrieve(self, request): 
-        data = {}
-        postid = self.request.GET.get('post')
-        
-        s = status.HTTP_200_OK
-       
-        try: 
-            obj = self.get_object(); 
-            savedx = obj.saved
-            data['save'] = savedx
-             
-        except: 
-            data['save'] = False
-
-        if(postid.isnumeric()):
-             get_object_or_404(BaseAdvertisement ,  id = postid)
-        else: 
-            data = {'status':'bad data format'}
-            s = status.HTTP_400_BAD_REQUEST
-        return  Response(data, s)
-    
-    
 class save_view2( viewsets.ModelViewSet):
     queryset = SavedModel.objects.all()
     serializer_class = SavedmodelSerializer
@@ -330,8 +191,19 @@ class save_view2( viewsets.ModelViewSet):
         queryset = SavedModel.objects.filter(user_n = self.request.user.id ); 
         return queryset; 
 
+      
+     
+class save_view3( viewsets.ModelViewSet):
+    queryset = SavedModel.objects.all()
+    serializer_class = SaveAdvertisementDatas
+    permission_classes = [IsAuthenticated,  SaveIsOwner]
+    lookup_field = 'id'
 
-
+    def get_queryset(self): 
+       return SavedModel.objects.filter(user_n = self.request.user.id ); 
+    
+        
+        
     
    
    

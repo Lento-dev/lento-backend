@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 from advertisement.models import BaseAdvertisement, FoodAdvertisement, SavedModel, ServiceAdvertisement, AnimalAdvertisement, \
-    ClothAdvertisement ,  Comment,Saved , SavedModel
+    ClothAdvertisement ,  Comment, SavedModel
 from rest_polymorphic.serializers import PolymorphicSerializer
 from user_account.models import Account
 
@@ -166,13 +166,6 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'body', 'owner', 'post' ]
 
 
-class SavedSerializer(serializers.ModelSerializer):
-
-
-    class Meta:
-        model = Saved
-        fields = "__all__"
-
 
 class SavedmodelSerializer(serializers.ModelSerializer):
 
@@ -180,5 +173,13 @@ class SavedmodelSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavedModel
         fields = "__all__"
-
-
+        
+class SaveAdvertisementDatas(serializers.ModelSerializer):
+    post_n = BaseAdvertisementPolymorphicSerializer(read_only=True) 
+    class Meta:
+        model = SavedModel
+        fields = "__all__"
+        
+        
+        
+        

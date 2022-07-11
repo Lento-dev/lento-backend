@@ -31,10 +31,10 @@ def Access_phone_number(request):
     account = get_object_or_404(Account ,id = request.user.id)
     Access = request.POST.get('Phone_Access')
     response = {}
-    print('status',Access)
+
     if(Access == 'true'): 
         account.access_phone = True  
-        print('here')
+        
         response['status'] = 'access to phone number is true'
     else: 
         account.access_phone = False
@@ -57,7 +57,7 @@ def Access_profile(request):
         account.access_profile = False
         response['status'] = 'access to profile is false'
     account.save()
-    print(account.access_profile)
+    
     return Response(response ,  status=status.HTTP_200_OK)
 
 
@@ -89,7 +89,7 @@ def verification(request):
         absurl='http://' + current_site + "?email=" + email  
         email_body = 'use link below to verify your email\n' + 'domain:' + absurl
         data = {'content':email_body ,'subject':'please verify you email' ,'to_email':[email]}	
-        print('*' * 50)
+        
         Util.send_email(data)	
         
         return Response(data)

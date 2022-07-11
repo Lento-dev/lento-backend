@@ -77,14 +77,6 @@ class Comment(models.Model):
     class Meta:
         ordering = ['created']
 
-class Saved(models.Model):
-
-    user = models.ForeignKey('user_account.Account', related_name='user', on_delete=models.CASCADE, blank=True)
-    post = models.ForeignKey('advertisement.BaseAdvertisement', related_name='post', on_delete=models.CASCADE, blank=True)
-    saved = models.BooleanField(default=True, blank=True, null=True)
-    
-    def str(self):
-        return self.post
     
 class SavedModel(models.Model):
 

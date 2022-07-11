@@ -1,6 +1,6 @@
 from django.urls import path
 from rest_framework.urlpatterns import format_suffix_patterns
-from .views import Foodcreate , animalcreate , Servicecreate, clothcreate 
+from .views import Foodcreate , animalcreate , Servicecreate, clothcreate
     
 from . import views
 
@@ -21,9 +21,8 @@ urlpatterns = [
     path('homepageads/' , views.AdvertisementViewSetreturn.as_view({'get': 'list'}) , name = 'list-all' ),
     path('userview/<int:pk>' , views.UserDetail.as_view() , name = 'user-detail' ),
     path('Saves/' , views.save_view2.as_view({'post': 'create'}), name="saves"),
-    path('Savelist/', views.save_view2.as_view({'get': 'list'} , ), name = "saves-list"),
-    path('Saves/<id>/', views.save_view2.as_view({'get': 'retrieve'} ), name = "saves-retrieve")
-    
+    path('Saves/<id>/', views.save_view2.as_view({'get': 'retrieve'} ), name = "saves-retrieve"),
+    path('Savelist/', views.save_view3.as_view({'get': 'list'}) , name = "saves-list2"),
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
