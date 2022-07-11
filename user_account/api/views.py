@@ -85,11 +85,11 @@ def verification(request):
     try: 
         data['resonse'] =  'success'
         email=request.GET.get('email')
-        current_site = 'localhost:3000/change-email/' 
+        current_site = '62.3.41.86/change-email/'
         absurl='http://' + current_site + "?email=" + email  
         email_body = 'use link below to verify your email\n' + 'domain:' + absurl
         data = {'content':email_body ,'subject':'please verify you email' ,'to_email':[email]}	
-        
+
         Util.send_email(data)	
         
         return Response(data)
