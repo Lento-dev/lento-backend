@@ -215,13 +215,14 @@ def Save_condition( request):
     
     try:
         saveobj  = SavedModel.objects.get(post_n = postid , user_n = user)
-        response['save_condition'] = 'is_save'
+        response['save_condition'] = 'save'
     except: 
-         response['save_condition'] = 'is_unsave'
+         response['save_condition'] = 'unsave'
         
     return Response(response) 
 
     
+
         
 
        
