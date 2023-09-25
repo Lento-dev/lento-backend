@@ -125,7 +125,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+.env.dev
 .venv
 env/
 venv/
@@ -383,3 +383,7 @@ pip-selfcheck.json
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,venv,pycharm,django
+media_cdn/
+static_cdn/
+nginx/lento-frontend/
+nginx/lento-frontend/*

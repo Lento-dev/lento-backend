@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  lento-backend:
+    build: .
+    command: bash -c "bash /code/docker-entrypoint.sh"
+    tty: true
+    stdin_open: true
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: "db"
+      DEPLOY: 0 # set this to 0 for development
+      FRONTEND_HOST: "http://localhost:3000"
+    depends_on:
+      - db
+    volumes:
+      - ./:/code
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: P@ssw0rdPostgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

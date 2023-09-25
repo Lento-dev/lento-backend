@@ -1,0 +1,37 @@
+name: Docker CI
+
+on:
+  push:
+    branches: [ main, DEV ]
+#  pull_request:
+#    branches: [ main, DEV ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Pull frontend
+        run: |
+          cd nginx
+          git clone https://github.com/Lento-dev/lento-frontend.git
+          cd lento-frontend
+          git checkout develop
+      - name: Build images
+        run: |
+          docker-compose -f docker-compose-prod.yaml up -d --build
+
+      - name: Run tests
+        run: |
+          docker-compose exec -T lento-backend python3 manage.py test
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.PASSWORD }}
+          script: ./back_deploy.sh
